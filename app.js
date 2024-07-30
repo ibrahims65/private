@@ -105,4 +105,33 @@ function displayResults(results) {
 
         const lastNameCell = document.createElement('td');
         lastNameCell.textContent = contact['Last Name'] || '';
-        row
+        row.appendChild(lastNameCell);
+
+        const phoneNumberCell = document.createElement('td');
+        phoneNumberCell.textContent = contact['Device 1 Address'] || '';
+        row.appendChild(phoneNumberCell);
+
+        additionalFields.forEach(field => {
+            const additionalCell = document.createElement('td');
+            additionalCell.textContent = contact[field] || '';
+            row.appendChild(additionalCell);
+        });
+
+        tableBody.appendChild(row);
+    });
+}
+
+function toggleFieldSelection() {
+    const checkboxGroup = document.getElementById('fieldCheckboxes');
+    const collapsibleButton = document.getElementById('collapsibleButton');
+
+    if (checkboxGroup.style.display === 'none' || checkboxGroup.style.display === '') {
+        checkboxGroup.style.display = 'block';
+        collapsibleButton.textContent = 'Click Here when Done!';
+        collapsibleButton.classList.add('done-button');
+    } else {
+        checkboxGroup.style.display = 'none';
+        collapsibleButton.textContent = 'Select Additional Fields';
+        collapsibleButton.classList.remove('done-button');
+    }
+}
