@@ -1,153 +1,108 @@
 let contacts = [];
 let additionalFields = [];
 
-// Load the CSV file using PapaParse
-document.getElementById('fileInput').addEventListener('change', function(event) {
+document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+
+function handleFileSelect(event) {
     const file = event.target.files[0];
-    if (file) {
-        Papa.parse(file, {
-            header: true,
-            dynamicTyping: true,
-            complete: function(results) {
-                contacts = results.data;
-                populateFieldCheckboxes(results.meta.fields);
-                console.log('Contacts loaded:', contacts);
-            }
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const csvData = e.target.result;
+        parseCSV(csvData);
+    };
+    reader.readAsText(file);
+}
+
+function parseCSV(data) {
+    const rows = data.split('\n');
+    const headers = rows[0].split(',');
+
+    contacts = rows.slice(1).map(row => {
+        const values = row.split(',');
+        const contact = {};
+        headers.forEach((header, index) => {
+            contact[header.trim()] = values[index].trim();
         });
-    }
-});
+        return contact;
+    });
 
-// Populate checkboxes for additional fields
-function populateFieldCheckboxes(fields) {
-    const checkboxContainer = document.getElementById('fieldCheckboxes');
-    checkboxContainer.innerHTML = ''; // Clear previous checkboxes
+    populateFieldSelection(headers);
+}
 
-    fields.forEach(field => {
-        if (field !== 'First Name' && field !== 'Last Name' && field !== 'Device 1 Address') {
+function populateFieldSelection(headers) {
+    const checkboxGroup = document.getElementById('fieldCheckboxes');
+    checkboxGroup.innerHTML = ''; // Clear existing checkboxes
+
+    headers.forEach(header => {
+        if (header !== 'First Name' && header !== 'Last Name' && header !== 'Device 1 Address') {
+            const checkboxDiv = document.createElement('div');
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
-            checkbox.value = field;
-            checkbox.id = field;
-            checkbox.onchange = updateAdditionalFields;
+            checkbox.value = header;
+            checkboxDiv.appendChild(checkbox);
 
             const label = document.createElement('label');
-            label.htmlFor = field;
-            label.textContent = field;
+            label.textContent = header;
+            checkboxDiv.appendChild(label);
 
-            const div = document.createElement('div');
-            div.appendChild(checkbox);
-            div.appendChild(label);
+            checkboxGroup.appendChild(checkboxDiv);
 
-            checkboxContainer.appendChild(div);
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    additionalFields.push(header);
+                } else {
+                    additionalFields = additionalFields.filter(field => field !== header);
+                }
+                if (checkboxGroup.style.display === 'block') {
+                    const collapsibleButton = document.getElementById('collapsibleButton');
+                    collapsibleButton.textContent = 'Click Here when Done!';
+                    collapsibleButton.classList.add('done-button');
+                }
+            });
         }
     });
 }
 
-// Update additional fields to display based on selected checkboxes
-function updateAdditionalFields() {
-    additionalFields = Array.from(document.querySelectorAll('#fieldCheckboxes input:checked'))
-                             .map(checkbox => checkbox.value);
-
-    // Change the button text and style after selection
-    const collapsibleButton = document.getElementById('collapsibleButton');
-    collapsibleButton.textContent = 'Click Here when Done!';
-    collapsibleButton.classList.add('done-button');
-}
-
-// Search contacts by first name and last name
 function searchContacts() {
-    const query = document.getElementById("searchInput").value.toLowerCase().trim();
-    
-    if (!contacts || contacts.length === 0) {
-        alert("Please load a CSV file first.");
-        return;
-    }
+    const query = document.getElementById('searchInput').value.trim().toLowerCase();
+    const queryParts = query.split(' ');
 
-    if (query === '') {
-        alert("Please enter a search term.");
-        return;
-    }
-
-    // Split query into parts
-    const queryParts = query.split(/\s+/);
-
-    // Ensure we have exactly two parts for first and last names
-    if (queryParts.length !== 2) {
-        alert("Please enter both first and last names.");
-        return;
-    }
-
-    const [part1, part2] = queryParts;
-
-    // Search for contacts matching first and last names in any order
     const results = contacts.filter(contact => {
-        const firstName = String(contact['First Name']).toLowerCase();
-        const lastName = String(contact['Last Name']).toLowerCase();
+        const firstName = contact['First Name'].toLowerCase();
+        const lastName = contact['Last Name'].toLowerCase();
 
-        // Check if the query matches first and last names in any order
         return (
-            (firstName.includes(part1) && lastName.includes(part2)) ||
-            (firstName.includes(part2) && lastName.includes(part1))
+            (queryParts.includes(firstName) && queryParts.includes(lastName)) ||
+            (queryParts.includes(lastName) && queryParts.includes(firstName))
         );
     });
 
     displayResults(results);
 }
 
-// Display the search results in the table
 function displayResults(results) {
-    const tableBody = document.getElementById("contactTableBody");
-    tableBody.innerHTML = ""; // Clear previous results
+    const tableBody = document.getElementById('contactsTableBody');
+    tableBody.innerHTML = ''; // Clear existing results
 
     if (results.length === 0) {
-        const noResultsRow = document.createElement("tr");
-        const noResultsCell = document.createElement("td");
+        const noResultsRow = document.createElement('tr');
+        const noResultsCell = document.createElement('td');
         noResultsCell.colSpan = 3;
-        noResultsCell.textContent = "No contacts found.";
+        noResultsCell.textContent = 'No contacts found.';
         noResultsRow.appendChild(noResultsCell);
         tableBody.appendChild(noResultsRow);
         return;
     }
 
     results.forEach(contact => {
-        const row = document.createElement("tr");
+        const row = document.createElement('tr');
 
-        const firstNameCell = document.createElement("td");
+        const firstNameCell = document.createElement('td');
         firstNameCell.textContent = contact['First Name'] || '';
         row.appendChild(firstNameCell);
 
-        const lastNameCell = document.createElement("td");
+        const lastNameCell = document.createElement('td');
         lastNameCell.textContent = contact['Last Name'] || '';
-        row.appendChild(lastNameCell);
-
-        const phoneCell = document.createElement("td");
-        phoneCell.textContent = contact['Device 1 Address'] || '';
-        row.appendChild(phoneCell);
-
-        // Add additional fields if selected
-        additionalFields.forEach(field => {
-            const fieldCell = document.createElement("td");
-            fieldCell.textContent = contact[field] || '';
-            row.appendChild(fieldCell);
-        });
-
-        tableBody.appendChild(row);
-    });
-}
-
-// Toggle field selection display
-function toggleFieldSelection() {
-    const checkboxGroup = document.getElementById('fieldCheckboxes');
-    if (checkboxGroup.style.display === 'block') {
-        checkboxGroup.style.display = 'none';
-    } else {
-        checkboxGroup.style.display = 'block';
-    }
-
-    // Reset button text and style when toggled
-    const collapsibleButton = document.getElementById('collapsibleButton');
-    if (checkboxGroup.style.display === 'block') {
-        collapsibleButton.textContent = 'Select Additional Fields';
-        collapsibleButton.classList.remove('done-button');
-    }
-}
+        row
