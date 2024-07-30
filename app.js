@@ -16,14 +16,16 @@ function handleFileSelect(event) {
 }
 
 function parseCSV(data) {
-    const rows = data.split('\n');
-    const headers = rows[0].split(',');
+    const rows = data.split('\n').filter(row => row.trim() !== ''); // Filter out empty rows
+    if (rows.length < 2) return; // Ensure there's at least one header row and one data row
+
+    const headers = rows[0].split(',').map(header => header.trim()); // Trim headers
 
     contacts = rows.slice(1).map(row => {
-        const values = row.split(',');
+        const values = row.split(',').map(value => value.trim()); // Trim values
         const contact = {};
         headers.forEach((header, index) => {
-            contact[header.trim()] = values[index].trim();
+            contact[header] = values[index] || ''; // Handle missing values
         });
         return contact;
     });
@@ -70,8 +72,8 @@ function searchContacts() {
     const queryParts = query.split(' ');
 
     const results = contacts.filter(contact => {
-        const firstName = contact['First Name'].toLowerCase();
-        const lastName = contact['Last Name'].toLowerCase();
+        const firstName = contact['First Name'] ? contact['First Name'].toLowerCase() : '';
+        const lastName = contact['Last Name'] ? contact['Last Name'].toLowerCase() : '';
 
         return (
             (queryParts.includes(firstName) && queryParts.includes(lastName)) ||
