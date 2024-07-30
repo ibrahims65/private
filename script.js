@@ -45,17 +45,18 @@ function parseCSV(csv) {
 function detectPhoneColumn() {
     if (contacts.length === 0) return;
 
-    const sampleSize = Math.min(contacts.length, 100); // Sample size for detection
     const headers = Object.keys(contacts[0]);
-    const phonePattern = /^\+?[0-9\s\-()]+$/; // Simple regex for phone numbers
 
-    // Prioritize checking the specific field first
-    if (headers.includes('BT Labeled Device 2 Address')) {
-        phoneColumn = 'BT Labeled Device 2 Address';
+    // Check specifically for "Device 2 Address"
+    if (headers.includes('Device 2 Address')) {
+        phoneColumn = 'Device 2 Address';
         return;
     }
 
-    // Fallback to regex detection
+    // Fallback to other potential headers if needed
+    const phonePattern = /^\+?[0-9\s\-()]+$/; // Simple regex for phone numbers
+    const sampleSize = Math.min(contacts.length, 100); // Sample size for detection
+
     headers.forEach(header => {
         let isPhoneColumn = false;
 
