@@ -135,22 +135,33 @@ function togglePagingAdditionalField(field, isChecked) {
 
 function searchContacts() {
     const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+    const searchTerms = searchTerm.split(',').map(term => term.trim());
+    
     const results = contacts.filter(contact => {
-        return (
-            contact['First Name'].toLowerCase().includes(searchTerm) ||
-            contact['Last Name'].toLowerCase().includes(searchTerm)
-        );
+        return searchTerms.some(term => {
+            const [firstName, lastName] = term.split(' ').map(t => t.trim().toLowerCase());
+            return (
+                (contact['First Name'].toLowerCase() === firstName && contact['Last Name'].toLowerCase() === lastName) ||
+                (contact['First Name'].toLowerCase() === lastName && contact['Last Name'].toLowerCase() === firstName)
+            );
+        });
     });
     displayContacts(results);
 }
 
 function searchPaging() {
     const searchTerm = document.getElementById('pagingSearchInput').value.trim().toLowerCase();
+    const searchTerms = searchTerm.split(',').map(term => term.trim());
+    
     const results = pagingSchedules.filter(schedule => {
-        return (
-            schedule['First Name'].toLowerCase().includes(searchTerm) ||
-            schedule['Last Name'].toLowerCase().includes(searchTerm)
-        );
+        return searchTerms.some(term => {
+            const [firstName, lastName] = term.split(' ').map(t => t.trim().toLowerCase());
+            return (
+                (schedule['First Name'].toLowerCase() === firstName && schedule['Last Name'].toLowerCase() === lastName) ||
+                (schedule['First Name'].toLowerCase() === lastName && schedule['Last Name'].toLowerCase() === firstName) ||
+                (schedule['ScheduleName'].toLowerCase() === term.toLowerCase())
+            );
+        });
     });
     displayPaging(results);
 }
@@ -183,7 +194,7 @@ function displayPaging(results) {
 
         row.appendChild(createCell(schedule['First Name']));
         row.appendChild(createCell(schedule['Last Name']));
-        row.appendChild(createCell(schedule['Device 1 Address']));
+        row.appendChild(createBoldCell(schedule['ScheduleName']));
 
         pagingAdditionalFields.forEach(field => {
             row.appendChild(createCell(schedule[field]));
@@ -196,6 +207,12 @@ function displayPaging(results) {
 function createCell(text) {
     const cell = document.createElement('td');
     cell.textContent = text || '';
+    return cell;
+}
+
+function createBoldCell(text) {
+    const cell = document.createElement('td');
+    cell.innerHTML = `<strong>${text || ''}</strong>`;
     return cell;
 }
 
