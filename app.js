@@ -49,7 +49,7 @@ function updateAdditionalFields() {
                              .map(checkbox => checkbox.value);
 }
 
-// Search contacts by first name, last name, or phone number
+// Search contacts by first name and last name
 function searchContacts() {
     const query = document.getElementById("searchInput").value.toLowerCase().trim();
     
@@ -63,10 +63,19 @@ function searchContacts() {
         return;
     }
 
-    const results = contacts.filter(contact => 
-        (contact['First Name'] && String(contact['First Name']).toLowerCase().includes(query)) || 
-        (contact['Last Name'] && String(contact['Last Name']).toLowerCase().includes(query))
-    );
+    // Split query into parts
+    const queryParts = query.split(/\s+/);
+
+    // Search for contacts matching any combination of first and last names
+    const results = contacts.filter(contact => {
+        const firstName = String(contact['First Name']).toLowerCase();
+        const lastName = String(contact['Last Name']).toLowerCase();
+
+        return queryParts.some(part => 
+            firstName.includes(part) || lastName.includes(part)
+        );
+    });
+
     displayResults(results);
 }
 
