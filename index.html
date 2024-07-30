@@ -9,9 +9,9 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #fff; /* White background */
+            background-color: #000; /* Black background for contrast */
+            color: #fff; /* White text color */
             position: relative;
-            color: #000; /* Black text color for contrast */
         }
 
         .logo {
@@ -25,12 +25,12 @@
             background-size: 50%; /* Keep reduced size */
             background-position: center;
             background-attachment: fixed;
-            opacity: 0.8; /* Increased opacity for more visibility */
+            opacity: 0.9; /* Increased opacity for better visibility */
             z-index: 0;
         }
 
         .overlay {
-            background-color: rgba(255, 255, 255, 0.9); /* Light background */
+            background-color: rgba(0, 0, 0, 0.8); /* Slightly transparent black background */
             padding: 20px;
             min-height: 100vh;
             position: relative;
@@ -39,10 +39,10 @@
 
         .search-container {
             margin: 20px;
-            background-color: #f9f9f9; /* Light gray background */
+            background-color: #333; /* Dark background for search container */
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.5);
             position: relative;
         }
 
@@ -52,14 +52,14 @@
             margin: 10px 0;
             width: calc(100% - 16px);
             box-sizing: border-box;
-            border: 1px solid #ccc;
+            border: 1px solid #666;
             border-radius: 4px;
-            background-color: #fff;
-            color: #000;
+            background-color: #444;
+            color: #fff;
         }
 
         .search-container button {
-            padding: 8px 12px; /* Smaller button size */
+            padding: 6px 10px; /* Smaller button size */
             margin-top: 10px;
             background-color: #4CAF50;
             color: white;
@@ -67,7 +67,7 @@
             cursor: pointer;
             border-radius: 4px;
             box-sizing: border-box;
-            font-size: 14px;
+            font-size: 12px; /* Smaller font size for buttons */
             display: inline-block; /* Allow placement next to other elements */
         }
 
@@ -79,32 +79,32 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            background-color: #f9f9f9;
-            color: #000; /* Text color set to black */
+            background-color: #333; /* Dark background for table */
+            color: #fff; /* White text color for table */
         }
 
         th, td {
             padding: 10px;
             text-align: left;
-            border-bottom: 1px solid #ccc;
+            border-bottom: 1px solid #555;
         }
 
         th {
-            background-color: #eee;
+            background-color: #444;
         }
 
         .checkbox-group {
             margin: 20px 0;
             max-height: 200px;
             overflow-y: auto;
-            border: 1px solid #ccc;
-            background-color: #f9f9f9;
+            border: 1px solid #666;
+            background-color: #333;
             padding: 10px;
             display: none;
             position: absolute;
             width: 90%;
             z-index: 1;
-            color: #000;
+            color: #fff;
         }
 
         .checkbox-group div {
@@ -112,7 +112,7 @@
         }
 
         .collapsible {
-            background-color: #777;
+            background-color: #555;
             color: white;
             cursor: pointer;
             padding: 10px;
@@ -126,14 +126,14 @@
         }
 
         .active, .collapsible:hover {
-            background-color: #555;
+            background-color: #444;
         }
 
         .content {
             padding: 0 18px;
             display: none;
             overflow: hidden;
-            background-color: #f1f1f1;
+            background-color: #333;
             margin-bottom: 10px;
         }
 
@@ -141,7 +141,6 @@
             position: relative;
         }
 
-        /* New styling for the "Click Here when Done!" button */
         .done-button {
             background-color: #f00; /* Red color for emphasis */
             color: #fff;
