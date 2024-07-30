@@ -47,6 +47,11 @@ function populateFieldCheckboxes(fields) {
 function updateAdditionalFields() {
     additionalFields = Array.from(document.querySelectorAll('#fieldCheckboxes input:checked'))
                              .map(checkbox => checkbox.value);
+
+    // Change the button text and style after selection
+    const collapsibleButton = document.getElementById('collapsibleButton');
+    collapsibleButton.textContent = 'Click Here when Done!';
+    collapsibleButton.classList.add('done-button');
 }
 
 // Search contacts by first name and last name
@@ -66,13 +71,23 @@ function searchContacts() {
     // Split query into parts
     const queryParts = query.split(/\s+/);
 
-    // Search for contacts matching any combination of first and last names
+    // Ensure we have exactly two parts for first and last names
+    if (queryParts.length !== 2) {
+        alert("Please enter both first and last names.");
+        return;
+    }
+
+    const [part1, part2] = queryParts;
+
+    // Search for contacts matching first and last names in any order
     const results = contacts.filter(contact => {
         const firstName = String(contact['First Name']).toLowerCase();
         const lastName = String(contact['Last Name']).toLowerCase();
 
-        return queryParts.some(part => 
-            firstName.includes(part) || lastName.includes(part)
+        // Check if the query matches first and last names in any order
+        return (
+            (firstName.includes(part1) && lastName.includes(part2)) ||
+            (firstName.includes(part2) && lastName.includes(part1))
         );
     });
 
@@ -86,32 +101,53 @@ function displayResults(results) {
 
     if (results.length === 0) {
         const noResultsRow = document.createElement("tr");
-        noResultsRow.innerHTML = `<td colspan="${3 + additionalFields.length}">No contacts found.</td>`;
+        const noResultsCell = document.createElement("td");
+        noResultsCell.colSpan = 3;
+        noResultsCell.textContent = "No contacts found.";
+        noResultsRow.appendChild(noResultsCell);
         tableBody.appendChild(noResultsRow);
         return;
     }
 
     results.forEach(contact => {
         const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${contact['First Name'] || ''}</td>
-            <td>${contact['Last Name'] || ''}</td>
-            <td>${contact['Device 1 Address'] || ''}</td>
-        `;
 
-        // Add additional fields to the row
+        const firstNameCell = document.createElement("td");
+        firstNameCell.textContent = contact['First Name'] || '';
+        row.appendChild(firstNameCell);
+
+        const lastNameCell = document.createElement("td");
+        lastNameCell.textContent = contact['Last Name'] || '';
+        row.appendChild(lastNameCell);
+
+        const phoneCell = document.createElement("td");
+        phoneCell.textContent = contact['Device 1 Address'] || '';
+        row.appendChild(phoneCell);
+
+        // Add additional fields if selected
         additionalFields.forEach(field => {
-            const cell = document.createElement("td");
-            cell.textContent = contact[field] || '';
-            row.appendChild(cell);
+            const fieldCell = document.createElement("td");
+            fieldCell.textContent = contact[field] || '';
+            row.appendChild(fieldCell);
         });
 
         tableBody.appendChild(row);
     });
 }
 
-// Collapsible logic
+// Toggle field selection display
 function toggleFieldSelection() {
     const checkboxGroup = document.getElementById('fieldCheckboxes');
-    checkboxGroup.style.display = checkboxGroup.style.display === 'block' ? 'none' : 'block';
+    if (checkboxGroup.style.display === 'block') {
+        checkboxGroup.style.display = 'none';
+    } else {
+        checkboxGroup.style.display = 'block';
+    }
+
+    // Reset button text and style when toggled
+    const collapsibleButton = document.getElementById('collapsibleButton');
+    if (checkboxGroup.style.display === 'block') {
+        collapsibleButton.textContent = 'Select Additional Fields';
+        collapsibleButton.classList.remove('done-button');
+    }
 }
