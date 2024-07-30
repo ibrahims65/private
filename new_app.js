@@ -4,6 +4,7 @@ let additionalFields = [];
 let pagingSchedules = [];
 let pagingAdditionalFields = [];
 
+// File selection event listeners for both sections
 document.getElementById('fileInput').addEventListener('change', handleFileSelect);
 document.getElementById('pagingFileInput').addEventListener('change', handlePagingFileSelect);
 
@@ -138,7 +139,14 @@ function searchContacts() {
     const filteredContacts = contacts.filter(contact => {
         const firstName = contact['First Name']?.toLowerCase() || '';
         const lastName = contact['Last Name']?.toLowerCase() || '';
-        return firstName.includes(query) || lastName.includes(query) || `${firstName} ${lastName}`.includes(query);
+        return (
+            query.split(',').some(q => 
+                firstName.includes(q.trim()) || 
+                lastName.includes(q.trim()) || 
+                `${firstName} ${lastName}`.includes(q.trim()) || 
+                `${lastName} ${firstName}`.includes(q.trim())
+            )
+        );
     });
 
     displayContacts(filteredContacts, selectedFields);
@@ -152,7 +160,15 @@ function searchPaging() {
         const firstName = schedule['First Name']?.toLowerCase() || '';
         const lastName = schedule['Last Name']?.toLowerCase() || '';
         const scheduleName = schedule['Schedule Name']?.toLowerCase() || '';
-        return firstName.includes(query) || lastName.includes(query) || scheduleName.includes(query);
+        return (
+            query.split(',').some(q => 
+                firstName.includes(q.trim()) || 
+                lastName.includes(q.trim()) || 
+                scheduleName.includes(q.trim()) || 
+                `${firstName} ${lastName}`.includes(q.trim()) || 
+                `${lastName} ${firstName}`.includes(q.trim())
+            )
+        );
     });
 
     displayPagingSchedules(filteredSchedules, selectedFields);
