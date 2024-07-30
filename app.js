@@ -11,6 +11,7 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
             complete: function(results) {
                 contacts = results.data;
                 populateFieldCheckboxes(results.meta.fields);
+                console.log('Contacts loaded:', contacts);
             }
         });
     }
@@ -52,6 +53,17 @@ function updateAdditionalFields() {
 function searchContacts() {
     const query = document.getElementById("searchInput").value.toLowerCase();
     const phoneRegex = /\b(?:\d{3}[-/]\d{2,4}[-/]\d{4}|\d{3}[-]\d{3}[-]\d{4})\b/;
+    
+    if (!contacts || contacts.length === 0) {
+        alert("Please load a CSV file first.");
+        return;
+    }
+
+    if (query.trim() === '') {
+        alert("Please enter a search term.");
+        return;
+    }
+
     const results = contacts.filter(contact => 
         (contact['First Name'] && String(contact['First Name']).toLowerCase().includes(query)) || 
         (contact['Last Name'] && String(contact['Last Name']).toLowerCase().includes(query)) ||
@@ -65,6 +77,13 @@ function searchContacts() {
 function displayResults(results) {
     const tableBody = document.getElementById("contactTableBody");
     tableBody.innerHTML = ""; // Clear previous results
+
+    if (results.length === 0) {
+        const noResultsRow = document.createElement("tr");
+        noResultsRow.innerHTML = `<td colspan="${3 + additionalFields.length}">No contacts found.</td>`;
+        tableBody.appendChild(noResultsRow);
+        return;
+    }
 
     results.forEach(contact => {
         const row = document.createElement("tr");
@@ -86,17 +105,7 @@ function displayResults(results) {
 }
 
 // Collapsible logic
-document.addEventListener('DOMContentLoaded', () => {
-    const coll = document.getElementsByClassName("collapsible");
-    for (let i = 0; i < coll.length; i++) {
-        coll[i].addEventListener("click", function() {
-            this.classList.toggle("active");
-            const content = this.nextElementSibling;
-            if (content.style.display === "block") {
-                content.style.display = "none";
-            } else {
-                content.style.display = "block";
-            }
-        });
-    }
-});
+function toggleFieldSelection() {
+    const checkboxGroup = document.getElementById('fieldCheckboxes');
+    checkboxGroup.style.display = checkboxGroup.style.display === 'block' ? 'none' : 'block';
+}
