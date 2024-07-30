@@ -1,24 +1,84 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
+    margin: 0;
+    padding: 0;
+    background: #f8f9fa;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('logo.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
-input, button {
-    margin-right: 10px;
-    padding: 5px;
+.content {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 800px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
+.instructions {
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.instructions p {
+    margin: 5px 0;
+}
+
+.instructions ul {
+    margin: 0;
+    padding: 0 20px;
+}
+
+input[type="text"],
+button,
+select {
+    margin: 10px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+button {
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+label {
+    margin: 5px;
+}
+
+select {
+    width: 200px;
+    height: auto;
 }
 
 table {
     width: 100%;
-    border-collapse: collapse;
     margin-top: 20px;
+    border-collapse: collapse;
 }
 
 th, td {
-    border: 1px solid #ddd;
     padding: 8px;
-}
-
-th {
-    background-color: #f4f4f4;
-}
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    background-color: rgba(255,
