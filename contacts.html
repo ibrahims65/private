@@ -4,50 +4,115 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Search</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .search-container {
+            margin: 20px;
+        }
+        .search-container input {
+            padding: 10px;
+            width: 300px;
+            margin-right: 10px;
+        }
+        .search-container button {
+            padding: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
-    <!-- Rest of your HTML -->
-    <!-- See the full body content below -->
-    <div class="content">
-        <h1>Contact Search</h1>
-        <div class="instructions">
-            <p>Welcome to the Contact Search Application! Follow these steps to search and view your contacts:</p>
-            <ul>
-                <li>Click on "Upload CSV" to load your contacts file.</li>
-                <li>Enter the first name or last name in the search boxes.</li>
-                <li>Select up to 5 additional fields from the dropdown to display more information.</li>
-                <li>Click "Search" to view the results.</li>
-            </ul>
-        </div>
-        <button onclick="document.getElementById('fileInput').click()">Upload CSV</button>
-        <input type="file" id="fileInput" accept=".csv" style="display: none;">
-        <input type="text" id="firstName" placeholder="First Name">
-        <input type="text" id="lastName" placeholder="Last Name">
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search by First Name or Last Name">
         <button onclick="searchContacts()">Search</button>
-        <div>
-            <label><input type="checkbox" id="showFirstName" checked> First Name</label>
-            <label><input type="checkbox" id="showLastName" checked> Last Name</label>
-            <label><input type="checkbox" id="showPhoneNumber" checked> Phone Number</label>
-            <select id="additionalFields" multiple size="5">
-                <!-- Options will be populated dynamically -->
-            </select>
-            <p>Select up to 5 additional fields</p>
-        </div>
-        <table id="resultsTable">
-            <thead>
-                <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Phone Number</th>
-                    <!-- Additional headers will be populated dynamically -->
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
     </div>
-    <script src="script.js" defer></script>
+    <table>
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+            </tr>
+        </thead>
+        <tbody id="contactTableBody">
+            <!-- Results will be displayed here -->
+        </tbody>
+    </table>
+
+    <script>
+        const contacts = []; // Array to hold parsed contact data
+
+        function loadCSV(file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const csvData = event.target.result;
+                parseCSV(csvData);
+            };
+            reader.readAsText(file);
+        }
+
+        function parseCSV(data) {
+            const lines = data.split("\n");
+            for (let i = 1; i < lines.length; i++) { // Skip the header
+                const line = lines[i].trim();
+                if (line) {
+                    const [firstName, lastName, email, phone] = line.split(",");
+                    contacts.push({ firstName, lastName, email, phone });
+                }
+            }
+        }
+
+        function searchContacts() {
+            const query = document.getElementById("searchInput").value.toLowerCase();
+            const results = contacts.filter(contact => 
+                contact.firstName.toLowerCase().includes(query) || 
+                contact.lastName.toLowerCase().includes(query)
+            );
+            displayResults(results);
+        }
+
+        function displayResults(results) {
+            const tableBody = document.getElementById("contactTableBody");
+            tableBody.innerHTML = ""; // Clear previous results
+            results.forEach(contact => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${contact.firstName}</td>
+                    <td>${contact.lastName}</td>
+                    <td>${contact.email}</td>
+                    <td>${contact.phone}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Load the CSV file from the local filesystem when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const csvFileInput = document.createElement('input');
+            csvFileInput.type = 'file';
+            csvFileInput.accept = '.csv';
+            csvFileInput.onchange = event => {
+                const file = event.target.files[0];
+                if (file) {
+                    loadCSV(file);
+                }
+            };
+            document.body.insertBefore(csvFileInput, document.body.firstChild);
+        });
+    </script>
 </body>
 </html>
