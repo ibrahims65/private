@@ -3,176 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Search App</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #000; /* Black background for contrast */
-            color: #fff; /* White text color */
-            position: relative;
-        }
-
-        .logo {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: url('logo.png'); /* Replace 'logo.png' with your actual logo file */
-            background-repeat: no-repeat;
-            background-size: 50%; /* Keep reduced size */
-            background-position: center;
-            background-attachment: fixed;
-            opacity: 0.9; /* Increased opacity for better visibility */
-            z-index: 0;
-        }
-
-        .overlay {
-            background-color: rgba(0, 0, 0, 0.8); /* Slightly transparent black background */
-            padding: 20px;
-            min-height: 100vh;
-            position: relative;
-            z-index: 1;
-        }
-
-        .search-container {
-            margin: 20px;
-            background-color: #333; /* Dark background for search container */
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.5);
-            position: relative;
-        }
-
-        .search-container input[type="file"],
-        .search-container input[type="text"] {
-            padding: 8px;
-            margin: 10px 0;
-            width: calc(100% - 16px);
-            box-sizing: border-box;
-            border: 1px solid #666;
-            border-radius: 4px;
-            background-color: #444;
-            color: #fff;
-        }
-
-        .search-container button {
-            padding: 6px 10px; /* Smaller button size */
-            margin-top: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 12px; /* Smaller font size for buttons */
-            display: inline-block; /* Allow placement next to other elements */
-        }
-
-        .search-container button:hover {
-            background-color: #45a049;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background-color: #333; /* Dark background for table */
-            color: #fff; /* White text color for table */
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #555;
-        }
-
-        th {
-            background-color: #444;
-        }
-
-        .checkbox-group {
-            margin: 20px 0;
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #666;
-            background-color: #333;
-            padding: 10px;
-            display: none;
-            position: absolute;
-            width: 90%;
-            z-index: 1;
-            color: #fff;
-        }
-
-        .checkbox-group div {
-            margin: 5px 0;
-        }
-
-        .collapsible {
-            background-color: #555;
-            color: white;
-            cursor: pointer;
-            padding: 10px;
-            width: 100%;
-            border: none;
-            text-align: left;
-            outline: none;
-            font-size: 15px;
-            box-sizing: border-box;
-            border-radius: 4px;
-        }
-
-        .active, .collapsible:hover {
-            background-color: #444;
-        }
-
-        .content {
-            padding: 0 18px;
-            display: none;
-            overflow: hidden;
-            background-color: #333;
-            margin-bottom: 10px;
-        }
-
-        .relative-position {
-            position: relative;
-        }
-
-        .done-button {
-            background-color: #f00; /* Red color for emphasis */
-            color: #fff;
-        }
-    </style>
+    <title>Contacts App</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="logo"></div>
-    <div class="overlay">
-        <div class="search-container">
-            <input type="file" id="fileInput" accept=".csv" />
-            <input type="text" id="searchInput" placeholder="Search by First or Last Name" />
-            <button onclick="searchContacts()">Search</button>
-            <button id="collapsibleButton" onclick="toggleFieldSelection()">Select Additional Fields</button>
-            <div class="checkbox-group" id="fieldCheckboxes">
-                <!-- Checkboxes for additional fields will be dynamically generated here -->
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Phone Number</th>
-                        <!-- Additional fields headers -->
-                    </tr>
-                </thead>
-                <tbody id="contactsTableBody">
-                    <!-- Contacts results will be dynamically populated here -->
-                </tbody>
-            </table>
-        </div>
+    <div class="container">
+        <input type="file" id="fileInput">
+        <input type="text" id="searchInput" placeholder="Search by First Name, Last Name">
+        <button id="searchButton" onclick="searchContacts()">Search</button>
+        <button id="collapsibleButton" onclick="toggleFieldSelection()">Select Additional Fields</button>
+        <div id="fieldCheckboxes"></div>
+        <table>
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Device 1 Address</th>
+                    <!-- Additional fields will be inserted here -->
+                </tr>
+            </thead>
+            <tbody id="contactsTableBody"></tbody>
+        </table>
     </div>
+    <img id="logo" src="logo.png" alt="Logo">
     <script src="app.js"></script>
 </body>
 </html>
