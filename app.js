@@ -27,10 +27,6 @@ function parseCSV(data) {
         headers.forEach((header, index) => {
             contact[header] = values[index] || ''; // Handle missing values
         });
-
-        // Identify phone number fields and their types
-        identifyPhoneNumberFields(contact, headers);
-
         return contact;
     });
 
@@ -120,10 +116,8 @@ function displayResults(results) {
         lastNameCell.textContent = contact['Last Name'] || '';
         row.appendChild(lastNameCell);
 
-        // Add a cell for phone numbers
         const phoneNumberCell = document.createElement('td');
-        const phoneNumbers = getPhoneNumbers(contact);
-        phoneNumberCell.textContent = phoneNumbers.join(', ') || 'No phone number';
+        phoneNumberCell.textContent = contact['Device 1 Address'] || '';
         row.appendChild(phoneNumberCell);
 
         additionalFields.forEach(field => {
@@ -133,60 +127,6 @@ function displayResults(results) {
         });
 
         tableBody.appendChild(row);
-    });
-}
-
-function getPhoneNumbers(contact) {
-    const phoneNumberPatterns = [
-        /\b\d{3}[-/]\d{3}[-/]\d{4}\b/g,  // e.g., 555-555-5555
-        /\b\d{3}[-/]\d{4}\b/g,           // e.g., 555-5555
-        /\b\d{3}[-/]\d{3}[-/]\d{4}\b/g,  // e.g., 555-555-5555
-        /\b\d{3}\/\d{6}\b/g,              // e.g., 555/555555
-        /\b\d{3}\/\d{3}[-/]\d{4}\b/g     // e.g., 555/555-5555
-    ];
-
-    const phoneNumbers = [];
-
-    for (const [key, value] of Object.entries(contact)) {
-        if (value) {
-            phoneNumberPatterns.forEach(pattern => {
-                const matches = value.match(pattern);
-                if (matches) {
-                    phoneNumbers.push(...matches);
-                }
-            });
-        }
-    }
-
-    return phoneNumbers;
-}
-
-function identifyPhoneNumberFields(contact, headers) {
-    const phoneNumberPatterns = [
-        /\b\d{3}[-/]\d{3}[-/]\d{4}\b/g,  // e.g., 555-555-5555
-        /\b\d{3}[-/]\d{4}\b/g,           // e.g., 555-5555
-        /\b\d{3}[-/]\d{3}[-/]\d{4}\b/g,  // e.g., 555-555-5555
-        /\b\d{3}\/\d{6}\b/g,              // e.g., 555/555555
-        /\b\d{3}\/\d{3}[-/]\d{4}\b/g     // e.g., 555/555-5555
-    ];
-
-    headers.forEach(header => {
-        const value = contact[header];
-        if (value && phoneNumberPatterns.some(pattern => pattern.test(value))) {
-            console.log(`Phone number detected in field '${header}': ${value}`);
-
-            // Determine if it is a home, cell, or sms based on header naming conventions
-            const normalizedHeader = header.toLowerCase();
-            if (normalizedHeader.includes('home')) {
-                console.log(`The field '${header}' seems to be a home phone number.`);
-            } else if (normalizedHeader.includes('cell') || normalizedHeader.includes('mobile')) {
-                console.log(`The field '${header}' seems to be a cell phone number.`);
-            } else if (normalizedHeader.includes('sms')) {
-                console.log(`The field '${header}' seems to be an SMS number.`);
-            } else {
-                console.log(`The field '${header}' may contain a phone number but its type is unknown.`);
-            }
-        }
     });
 }
 
