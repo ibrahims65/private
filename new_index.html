@@ -14,7 +14,7 @@
             align-items: center;
             flex-direction: column;
             min-height: 100vh;
-            background-color: white;
+            background-color: #f3f4f6;
             position: relative;
         }
 
@@ -24,16 +24,17 @@
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
-            background-color: #f9f9f9;
+            background-color: #ffffff;
             border-radius: 8px;
+            position: relative;
         }
 
         #logo {
             position: absolute;
-            bottom: 10px;
+            top: 10px;
             right: 10px;
-            width: 150px;
-            opacity: 0.5;
+            width: 100px;
+            opacity: 0.1;
             z-index: -1;
         }
 
@@ -42,22 +43,28 @@
             color: #333;
         }
 
-        .search-container {
+        .search-container,
+        .paging-search-container {
             display: flex;
             justify-content: center;
+            align-items: center;
             margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
-        .search-container input[type="text"] {
-            width: 60%;
+        .search-container input[type="text"],
+        .paging-search-container input[type="text"] {
+            flex: 1;
+            min-width: 250px;
             padding: 10px;
             font-size: 16px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            margin-right: 10px;
         }
 
-        .search-container button {
+        .search-container button,
+        .paging-search-container button {
             padding: 10px 20px;
             font-size: 16px;
             border: none;
@@ -68,22 +75,25 @@
             transition: background-color 0.3s;
         }
 
-        .search-container button:hover {
+        .search-container button:hover,
+        .paging-search-container button:hover {
             background-color: #0056b3;
         }
 
-        .field-selection {
+        .field-selection,
+        .paging-field-selection {
             margin-bottom: 20px;
             display: none;
             max-height: 200px;
             overflow-y: auto;
             border: 1px solid #ddd;
             padding: 10px;
-            background-color: #fff;
+            background-color: #f9f9f9;
             border-radius: 4px;
         }
 
-        .field-selection div {
+        .field-selection div,
+        .paging-field-selection div {
             margin-bottom: 5px;
         }
 
@@ -106,58 +116,31 @@
         }
 
         .paging-container {
-            background-color: #e9ecef;
+            background-color: #f1f3f5;
         }
 
-        .paging-search-container {
+        .file-upload {
+            margin-bottom: 10px;
             display: flex;
             justify-content: center;
-            margin-bottom: 20px;
+            align-items: center;
         }
 
-        .paging-search-container input[type="text"] {
-            width: 60%;
+        .file-upload input[type="file"] {
             padding: 10px;
-            font-size: 16px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            margin-right: 10px;
-        }
-
-        .paging-search-container button {
-            padding: 10px 20px;
-            font-size: 16px;
-            border: none;
-            border-radius: 4px;
-            background-color: #007bff;
-            color: white;
+            background-color: #ffffff;
             cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .paging-search-container button:hover {
-            background-color: #0056b3;
-        }
-
-        .paging-field-selection {
-            margin-bottom: 20px;
-            display: none;
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            padding: 10px;
-            background-color: #fff;
-            border-radius: 4px;
-        }
-
-        .paging-field-selection div {
-            margin-bottom: 5px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>Contact Search</h2>
+        <div class="file-upload">
+            <input type="file" id="fileInput" accept=".csv">
+        </div>
         <div class="search-container">
             <input type="text" id="searchInput" placeholder="Search by First Name, Last Name, or both">
             <button onclick="searchContacts()">Search</button>
@@ -178,6 +161,9 @@
 
     <div class="container paging-container">
         <h2>Paging Schedules and Membership</h2>
+        <div class="file-upload">
+            <input type="file" id="pagingFileInput" accept=".csv">
+        </div>
         <div class="paging-search-container">
             <input type="text" id="pagingSearchInput" placeholder="Search by First Name, Last Name, or Schedule Name">
             <button onclick="searchPaging()">Search</button>
