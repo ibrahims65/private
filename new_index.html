@@ -9,20 +9,30 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            min-height: 100vh;
             background-color: #f3f4f6;
             position: relative;
+            min-height: 100vh;
+            padding-top: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            color: #007bff;
+            margin: 0;
+            font-weight: bold;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1200px;
+            margin: 0 auto;
             width: 100%;
             padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             background-color: #ffffff;
             border-radius: 8px;
@@ -32,21 +42,22 @@
         #logo {
             position: absolute;
             top: 10px;
-            right: 10px;
-            width: 100px;
-            opacity: 0.1;
-            z-index: -1;
+            right: 20px;
+            width: 150px;
+            opacity: 0.2;
         }
 
         h2 {
-            text-align: center;
+            text-align: left;
             color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
         }
 
         .search-container,
         .paging-search-container {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
             flex-wrap: wrap;
@@ -100,6 +111,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 20px;
         }
 
         table, th, td {
@@ -116,13 +128,13 @@
         }
 
         .paging-container {
-            background-color: #f1f3f5;
+            background-color: #e8f0fe;
         }
 
         .file-upload {
             margin-bottom: 10px;
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
         }
 
@@ -132,10 +144,15 @@
             border-radius: 4px;
             background-color: #ffffff;
             cursor: pointer;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
+    <div class="header">
+        <h1>GEICO NOC</h1>
+    </div>
+
     <div class="container">
         <h2>Contact Search</h2>
         <div class="file-upload">
@@ -175,7 +192,7 @@
                 <tr>
                     <th>First Name</th>
                     <th>Last Name</th>
-                    <th>Schedule Name</th>
+                    <th><b>Schedule Name</b></th>
                 </tr>
             </thead>
             <tbody id="pagingTableBody"></tbody>
