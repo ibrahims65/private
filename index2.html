@@ -86,45 +86,22 @@
             display: none;
         }
 
-        .spreadsheet-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        .spreadsheet-table th, .spreadsheet-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        .spreadsheet-table tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        .spreadsheet-table th {
-            background-color: #f4f4f4;
-        }
-
-        .minimized {
+        .iframe-container {
             display: none;
+            margin-top: 20px;
         }
 
-        .minimize-button, .save-button {
-            background-color: #007bff;
-            color: white;
+        iframe {
+            width: 100%;
+            height: 600px;
             border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            font-size: 12px;
-            margin-right: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Contact file input -->
-        <input type="file" id="fileInput">
+        <input type="file" id="fileInput" accept=".csv">
         
         <!-- Search functionality -->
         <input type="text" id="nameSearchInput" placeholder="Search by First Name, Last Name (comma-separated)">
@@ -133,8 +110,6 @@
         
         <!-- Additional spreadsheet input -->
         <input type="file" id="excelFileInput" accept=".xlsx, .xls">
-        <button id="minimizeButton" class="minimize-button" onclick="toggleSpreadsheetVisibility()">Minimize/Restore</button>
-        <button id="saveButton" class="save-button" onclick="saveSpreadsheet()">Save Changes</button>
 
         <!-- Field checkboxes for selection -->
         <div id="fieldCheckboxes"></div>
@@ -152,16 +127,9 @@
             <tbody id="contactsTableBody"></tbody>
         </table>
 
-        <!-- Container for additional spreadsheet -->
-        <div id="spreadsheetContainer" class="spreadsheet-container">
-            <table id="spreadsheetTable" class="spreadsheet-table">
-                <thead>
-                    <!-- Spreadsheet headers -->
-                </thead>
-                <tbody>
-                    <!-- Spreadsheet content -->
-                </tbody>
-            </table>
+        <!-- Container for displaying Excel file in iframe -->
+        <div id="iframeContainer" class="iframe-container">
+            <iframe id="spreadsheetIframe" src=""></iframe>
         </div>
     </div>
     <img id="logo" src="logo.png" alt="Logo">
