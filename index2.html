@@ -5,135 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contacts App</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            background-color: white;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            padding: 20px;
-        }
-
-        #logo {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            width: 100px;
-            opacity: 1;
-            z-index: 1000;
-        }
-
-        #fieldCheckboxes {
-            display: none;
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #ccc;
-            padding: 10px;
-            background-color: #f9f9f9;
-            position: absolute;
-            z-index: 999;
-            width: 300px;
-        }
-
-        #collapsibleButton {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-
-        .done-button {
-            background-color: #28a745;
-        }
-
-        #searchButton {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        th {
-            background-color: #f4f4f4;
-        }
-
-        .spreadsheet-container {
-            margin-top: 20px;
-            display: none;
-        }
-
-        .iframe-container {
-            display: none;
-            margin-top: 20px;
-        }
-
-        iframe {
-            width: 100%;
-            height: 600px;
-            border: none;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
-        <!-- Contact file input -->
-        <input type="file" id="fileInput" accept=".csv">
-        
-        <!-- Search functionality -->
-        <input type="text" id="nameSearchInput" placeholder="Search by First Name, Last Name (comma-separated)">
-        <button id="searchButton" onclick="searchContacts()">Search</button>
+        <h1>Contacts Search</h1>
+        <input type="file" id="contactsFileInput" accept=".csv" style="margin-bottom: 10px;">
+        <div>
+            <input type="text" id="searchInput" placeholder="Search First and Last Names" style="width: 100%; padding: 10px;">
+            <button onclick="searchContacts()">Search</button>
+        </div>
+
         <button id="collapsibleButton" onclick="toggleFieldSelection()">Select Additional Fields</button>
-        
-        <!-- Additional spreadsheet input -->
-        <input type="file" id="excelFileInput" accept=".xlsx, .xls">
+        <div id="fieldCheckboxes" style="display: none; max-height: 200px; overflow-y: auto;">
+            <!-- Dynamically filled with JavaScript -->
+        </div>
 
-        <!-- Field checkboxes for selection -->
-        <div id="fieldCheckboxes"></div>
-
-        <!-- Contacts table -->
-        <table>
+        <table id="resultsTable">
             <thead>
                 <tr>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Phone Number</th>
-                    <!-- Additional fields will be inserted here -->
+                    <!-- Additional fields dynamically added -->
                 </tr>
             </thead>
-            <tbody id="contactsTableBody"></tbody>
+            <tbody>
+                <!-- Results dynamically filled with JavaScript -->
+            </tbody>
         </table>
 
-        <!-- Container for displaying Excel file in iframe -->
-        <div id="iframeContainer" class="iframe-container">
-            <iframe id="spreadsheetIframe" src=""></iframe>
+        <h2>Upload and Edit Spreadsheet</h2>
+        <input type="file" id="excelFileInput" accept=".html" style="margin-bottom: 10px;">
+        <button onclick="toggleSpreadsheetVisibility()">Minimize/Maximize Spreadsheet</button>
+
+        <div id="spreadsheetContainer" style="display: none;">
+            <iframe id="spreadsheetIframe" style="width: 100%; height: 500px; border: none;"></iframe>
         </div>
     </div>
-    <img id="logo" src="logo.png" alt="Logo">
-    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+    <img id="logo" src="logo.png" alt="Logo" style="position: fixed; bottom: 10px; right: 10px; width: 100px; height: auto;">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
