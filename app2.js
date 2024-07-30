@@ -1,8 +1,14 @@
 let contacts = [];
 let additionalFields = [];
 let headers = [];
+let spreadsheetData = [];
+let spreadsheetHeaders = [];
 
+// File input for contacts CSV
 document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+
+// File input for additional spreadsheet
+document.getElementById('excelFileInput').addEventListener('change', handleExcelFileSelect);
 
 function handleFileSelect(event) {
     const file = event.target.files[0];
@@ -93,28 +99,9 @@ function searchContacts() {
     displayResults(results);
 }
 
-function keywordSearch() {
-    const keyword = document.getElementById('keywordSearchInput').value.trim().toLowerCase();
-    const results = contacts.filter(contact => {
-        return Object.values(contact).some(value => value.toLowerCase().includes(keyword));
-    });
-
-    displayResults(results);
-}
-
 function displayResults(results) {
     const tableBody = document.getElementById('contactsTableBody');
-    tableBody.innerHTML = ''; // Clear existing results
-
-    if (results.length === 0) {
-        const noResultsRow = document.createElement('tr');
-        const noResultsCell = document.createElement('td');
-        noResultsCell.colSpan = 3 + additionalFields.length;
-        noResultsCell.textContent = 'No contacts found.';
-        noResultsRow.appendChild(noResultsCell);
-        tableBody.appendChild(noResultsRow);
-        return;
-    }
+    tableBody.innerHTML = ''; // Clear previous results
 
     results.forEach(contact => {
         const row = document.createElement('tr');
@@ -156,33 +143,79 @@ function toggleFieldSelection() {
     }
 }
 
-function copySpreadsheet() {
-    const fileName = prompt('Enter new file name:');
+function handleExcelFileSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        spreadsheetData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+        displaySpreadsheet(spreadsheetData);
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+function displaySpreadsheet(data) {
+    const spreadsheetContainer = document.getElementById('spreadsheetContainer');
+    const tableBody = spreadsheetContainer.querySelector('tbody');
+    const tableHead = spreadsheetContainer.querySelector('thead');
+    tableBody.innerHTML = ''; // Clear previous data
+    tableHead.innerHTML = '';
+
+    if (data.length === 0) return;
+
+    spreadsheetHeaders = data[0]; // First row as headers
+
+    const headerRow = document.createElement('tr');
+    spreadsheetHeaders.forEach(header => {
+        const th = document.createElement('th');
+        th.textContent = header;
+        headerRow.appendChild(th);
+    });
+    tableHead.appendChild(headerRow);
+
+    data.slice(1).forEach(rowData => {
+        const row = document.createElement('tr');
+        rowData.forEach((cellData, index) => {
+            const cell = document.createElement('td');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = cellData || '';
+            input.oninput = function() {
+                spreadsheetData[data.indexOf(rowData) + 1][index] = input.value; // Update data on input change
+            };
+            cell.appendChild(input);
+            row.appendChild(cell);
+        });
+        tableBody.appendChild(row);
+    });
+
+    spreadsheetContainer.style.display = 'block'; // Show spreadsheet
+}
+
+function toggleSpreadsheetVisibility() {
+    const spreadsheetContainer = document.getElementById('spreadsheetContainer');
+    if (spreadsheetContainer.classList.contains('minimized')) {
+        spreadsheetContainer.classList.remove('minimized');
+    } else {
+        spreadsheetContainer.classList.add('minimized');
+    }
+}
+
+function saveSpreadsheet() {
+    if (spreadsheetData.length === 0) return;
+
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.aoa_to_sheet(spreadsheetData);
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+
+    const fileName = prompt('Enter file name to save:');
     if (!fileName) return;
 
-    // Generate CSV data from current contact list
-    const csvContent = [headers.join(',')].concat(contacts.map(contact =>
-        headers.map(header => contact[header] || '').join(',')
-    )).join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-
-    // Create a link to download the CSV file
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `${fileName}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    // Open the CSV file in a new window
-    window.open(url);
-
-    // Minimize search inputs
-    document.getElementById('nameSearchInput').classList.add('minimized');
-    document.getElementById('keywordSearchInput').classList.add('minimized');
-    document.getElementById('searchButton').classList.add('minimized');
-    document.getElementById('keywordSearchButton').classList.add('minimized');
-    document.getElementById('collapsibleButton').classList.add('minimized');
+    XLSX.writeFile(workbook, `${fileName}.xlsx`);
 }
