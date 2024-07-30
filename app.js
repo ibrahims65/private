@@ -49,26 +49,23 @@ function updateAdditionalFields() {
                              .map(checkbox => checkbox.value);
 }
 
-// Search contacts by first name, last name, phone number, or phone-like strings
+// Search contacts by first name, last name, or phone number
 function searchContacts() {
-    const query = document.getElementById("searchInput").value.toLowerCase();
-    const phoneRegex = /\b(?:\d{3}[-/]\d{2,4}[-/]\d{4}|\d{3}[-]\d{3}[-]\d{4})\b/;
+    const query = document.getElementById("searchInput").value.toLowerCase().trim();
     
     if (!contacts || contacts.length === 0) {
         alert("Please load a CSV file first.");
         return;
     }
 
-    if (query.trim() === '') {
+    if (query === '') {
         alert("Please enter a search term.");
         return;
     }
 
     const results = contacts.filter(contact => 
         (contact['First Name'] && String(contact['First Name']).toLowerCase().includes(query)) || 
-        (contact['Last Name'] && String(contact['Last Name']).toLowerCase().includes(query)) ||
-        (contact['Device 1 Address'] && String(contact['Device 1 Address']).toLowerCase().includes(query)) ||
-        Object.values(contact).some(value => phoneRegex.test(String(value)))
+        (contact['Last Name'] && String(contact['Last Name']).toLowerCase().includes(query))
     );
     displayResults(results);
 }
