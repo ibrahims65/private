@@ -75,17 +75,18 @@ function searchContacts() {
         const firstName = contact['First Name'] ? contact['First Name'].toLowerCase() : '';
         const lastName = contact['Last Name'] ? contact['Last Name'].toLowerCase() : '';
 
-        if (queryParts.length === 1) {
-            // Search with one query part
-            return firstName.includes(queryParts[0]) || lastName.includes(queryParts[0]);
-        } else if (queryParts.length === 2) {
-            // Search with two query parts (first and last name)
-            return (
-                (firstName.includes(queryParts[0]) && lastName.includes(queryParts[1])) ||
-                (firstName.includes(queryParts[1]) && lastName.includes(queryParts[0]))
-            );
-        }
-        return false;
+        return queryParts.some(part => {
+            const nameParts = part.split(' ').filter(Boolean); // Split on spaces and filter out empty parts
+            if (nameParts.length === 1) {
+                return firstName.includes(nameParts[0]) || lastName.includes(nameParts[0]);
+            } else if (nameParts.length === 2) {
+                return (
+                    (firstName.includes(nameParts[0]) && lastName.includes(nameParts[1])) ||
+                    (firstName.includes(nameParts[1]) && lastName.includes(nameParts[0]))
+                );
+            }
+            return false;
+        });
     });
 
     displayResults(results);
@@ -98,7 +99,7 @@ function displayResults(results) {
     if (results.length === 0) {
         const noResultsRow = document.createElement('tr');
         const noResultsCell = document.createElement('td');
-        noResultsCell.colSpan = 3;
+        noResultsCell.colSpan = 3 + additionalFields.length;
         noResultsCell.textContent = 'No contacts found.';
         noResultsRow.appendChild(noResultsCell);
         tableBody.appendChild(noResultsRow);
