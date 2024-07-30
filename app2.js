@@ -1,8 +1,6 @@
 let contacts = [];
 let additionalFields = [];
 let headers = [];
-let spreadsheetData = [];
-let spreadsheetHeaders = [];
 
 // File input for contacts CSV
 document.getElementById('fileInput').addEventListener('change', handleFileSelect);
@@ -153,49 +151,21 @@ function handleExcelFileSelect(event) {
         const workbook = XLSX.read(data, { type: 'array' });
         const firstSheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[firstSheetName];
-        spreadsheetData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        const range = XLSX.utils.decode_range(worksheet['!ref']);
+        const csvData = XLSX.utils.sheet_to_csv(worksheet);
+        const blob = new Blob([csvData], { type: 'text/csv' });
+        const fileURL = URL.createObjectURL(blob);
 
-        displaySpreadsheet(spreadsheetData);
+        openSpreadsheetInIframe(fileURL);
     };
     reader.readAsArrayBuffer(file);
 }
 
-function displaySpreadsheet(data) {
-    const spreadsheetContainer = document.getElementById('spreadsheetContainer');
-    const tableBody = spreadsheetContainer.querySelector('tbody');
-    const tableHead = spreadsheetContainer.querySelector('thead');
-    tableBody.innerHTML = ''; // Clear previous data
-    tableHead.innerHTML = '';
-
-    if (data.length === 0) return;
-
-    spreadsheetHeaders = data[0]; // First row as headers
-
-    const headerRow = document.createElement('tr');
-    spreadsheetHeaders.forEach(header => {
-        const th = document.createElement('th');
-        th.textContent = header;
-        headerRow.appendChild(th);
-    });
-    tableHead.appendChild(headerRow);
-
-    data.slice(1).forEach(rowData => {
-        const row = document.createElement('tr');
-        rowData.forEach((cellData, index) => {
-            const cell = document.createElement('td');
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.value = cellData || '';
-            input.oninput = function() {
-                spreadsheetData[data.indexOf(rowData) + 1][index] = input.value; // Update data on input change
-            };
-            cell.appendChild(input);
-            row.appendChild(cell);
-        });
-        tableBody.appendChild(row);
-    });
-
-    spreadsheetContainer.style.display = 'block'; // Show spreadsheet
+function openSpreadsheetInIframe(fileURL) {
+    const iframeContainer = document.getElementById('iframeContainer');
+    const spreadsheetIframe = document.getElementById('spreadsheetIframe');
+    spreadsheetIframe.src = fileURL; // Set iframe src to file URL
+    iframeContainer.style.display = 'block'; // Show iframe container
 }
 
 function toggleSpreadsheetVisibility() {
@@ -205,17 +175,4 @@ function toggleSpreadsheetVisibility() {
     } else {
         spreadsheetContainer.classList.add('minimized');
     }
-}
-
-function saveSpreadsheet() {
-    if (spreadsheetData.length === 0) return;
-
-    const workbook = XLSX.utils.book_new();
-    const worksheet = XLSX.utils.aoa_to_sheet(spreadsheetData);
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-
-    const fileName = prompt('Enter file name to save:');
-    if (!fileName) return;
-
-    XLSX.writeFile(workbook, `${fileName}.xlsx`);
 }
