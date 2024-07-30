@@ -78,19 +78,21 @@ function populateFieldSelection(headers) {
     checkboxGroup.innerHTML = '';
 
     headers.forEach(header => {
-        if (header !== 'First Name' && header !== 'Last Name' && header !== 'Device 1 Address') {
-            const checkboxDiv = document.createElement('div');
+        if (header !== 'First Name' && header !== 'Last Name' && header !== 'Phone Number') {
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.value = header;
-            checkbox.checked = additionalFields.includes(header);
-            checkbox.addEventListener('change', () => {
-                toggleAdditionalField(header, checkbox.checked);
-            });
+            checkbox.id = 'field-' + header;
 
-            checkboxDiv.appendChild(checkbox);
-            checkboxDiv.appendChild(document.createTextNode(header));
-            checkboxGroup.appendChild(checkboxDiv);
+            const label = document.createElement('label');
+            label.htmlFor = 'field-' + header;
+            label.textContent = header;
+
+            const container = document.createElement('div');
+            container.appendChild(checkbox);
+            container.appendChild(label);
+
+            checkboxGroup.appendChild(container);
         }
     });
 }
@@ -100,136 +102,124 @@ function populatePagingFieldSelection(headers) {
     checkboxGroup.innerHTML = '';
 
     headers.forEach(header => {
-        if (header !== 'First Name' && header !== 'Last Name' && header !== 'Device 1 Address') {
-            const checkboxDiv = document.createElement('div');
+        if (header !== 'First Name' && header !== 'Last Name' && header !== 'Schedule Name') {
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.value = header;
-            checkbox.checked = pagingAdditionalFields.includes(header);
-            checkbox.addEventListener('change', () => {
-                togglePagingAdditionalField(header, checkbox.checked);
-            });
+            checkbox.id = 'paging-field-' + header;
 
-            checkboxDiv.appendChild(checkbox);
-            checkboxDiv.appendChild(document.createTextNode(header));
-            checkboxGroup.appendChild(checkboxDiv);
+            const label = document.createElement('label');
+            label.htmlFor = 'paging-field-' + header;
+            label.textContent = header;
+
+            const container = document.createElement('div');
+            container.appendChild(checkbox);
+            container.appendChild(label);
+
+            checkboxGroup.appendChild(container);
         }
     });
 }
 
-function toggleAdditionalField(field, isChecked) {
-    if (isChecked) {
-        additionalFields.push(field);
-    } else {
-        additionalFields = additionalFields.filter(f => f !== field);
-    }
-}
-
-function togglePagingAdditionalField(field, isChecked) {
-    if (isChecked) {
-        pagingAdditionalFields.push(field);
-    } else {
-        pagingAdditionalFields = pagingAdditionalFields.filter(f => f !== field);
-    }
-}
-
-function searchContacts() {
-    const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
-    const searchTerms = searchTerm.split(',').map(term => term.trim());
-    
-    const results = contacts.filter(contact => {
-        return searchTerms.some(term => {
-            const [firstName, lastName] = term.split(' ').map(t => t.trim().toLowerCase());
-            return (
-                (contact['First Name'].toLowerCase() === firstName && contact['Last Name'].toLowerCase() === lastName) ||
-                (contact['First Name'].toLowerCase() === lastName && contact['Last Name'].toLowerCase() === firstName)
-            );
-        });
-    });
-    displayContacts(results);
-}
-
-function searchPaging() {
-    const searchTerm = document.getElementById('pagingSearchInput').value.trim().toLowerCase();
-    const searchTerms = searchTerm.split(',').map(term => term.trim());
-    
-    const results = pagingSchedules.filter(schedule => {
-        return searchTerms.some(term => {
-            const [firstName, lastName] = term.split(' ').map(t => t.trim().toLowerCase());
-            return (
-                (schedule['First Name'].toLowerCase() === firstName && schedule['Last Name'].toLowerCase() === lastName) ||
-                (schedule['First Name'].toLowerCase() === lastName && schedule['Last Name'].toLowerCase() === firstName) ||
-                (schedule['ScheduleName'].toLowerCase() === term.toLowerCase())
-            );
-        });
-    });
-    displayPaging(results);
-}
-
-function displayContacts(results) {
-    const tableBody = document.getElementById('contactsTableBody');
-    tableBody.innerHTML = '';
-
-    results.forEach(contact => {
-        const row = document.createElement('tr');
-
-        row.appendChild(createCell(contact['First Name']));
-        row.appendChild(createCell(contact['Last Name']));
-        row.appendChild(createCell(contact['Device 1 Address']));
-
-        additionalFields.forEach(field => {
-            row.appendChild(createCell(contact[field]));
-        });
-
-        tableBody.appendChild(row);
-    });
-}
-
-function displayPaging(results) {
-    const tableBody = document.getElementById('pagingTableBody');
-    tableBody.innerHTML = '';
-
-    results.forEach(schedule => {
-        const row = document.createElement('tr');
-
-        row.appendChild(createCell(schedule['First Name']));
-        row.appendChild(createCell(schedule['Last Name']));
-        row.appendChild(createBoldCell(schedule['ScheduleName']));
-
-        pagingAdditionalFields.forEach(field => {
-            row.appendChild(createCell(schedule[field]));
-        });
-
-        tableBody.appendChild(row);
-    });
-}
-
-function createCell(text) {
-    const cell = document.createElement('td');
-    cell.textContent = text || '';
-    return cell;
-}
-
-function createBoldCell(text) {
-    const cell = document.createElement('td');
-    cell.innerHTML = `<strong>${text || ''}</strong>`;
-    return cell;
-}
-
 function toggleFieldSelection() {
-    const checkboxGroup = document.getElementById('fieldCheckboxes');
-    checkboxGroup.style.display = checkboxGroup.style.display === 'none' ? 'block' : 'none';
+    const selection = document.getElementById('fieldCheckboxes');
+    selection.style.display = selection.style.display === 'none' ? 'block' : 'none';
 }
 
 function togglePagingFieldSelection() {
-    const checkboxGroup = document.getElementById('pagingFieldCheckboxes');
-    checkboxGroup.style.display = checkboxGroup.style.display === 'none' ? 'block' : 'none';
+    const selection = document.getElementById('pagingFieldCheckboxes');
+    selection.style.display = selection.style.display === 'none' ? 'block' : 'none';
+}
+
+function searchContacts() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    const selectedFields = Array.from(document.querySelectorAll('#fieldCheckboxes input[type="checkbox"]:checked')).map(checkbox => checkbox.value);
+
+    const filteredContacts = contacts.filter(contact => {
+        const firstName = contact['First Name']?.toLowerCase() || '';
+        const lastName = contact['Last Name']?.toLowerCase() || '';
+        return firstName.includes(query) || lastName.includes(query) || `${firstName} ${lastName}`.includes(query);
+    });
+
+    displayContacts(filteredContacts, selectedFields);
+}
+
+function searchPaging() {
+    const query = document.getElementById('pagingSearchInput').value.toLowerCase();
+    const selectedFields = Array.from(document.querySelectorAll('#pagingFieldCheckboxes input[type="checkbox"]:checked')).map(checkbox => checkbox.value);
+
+    const filteredSchedules = pagingSchedules.filter(schedule => {
+        const firstName = schedule['First Name']?.toLowerCase() || '';
+        const lastName = schedule['Last Name']?.toLowerCase() || '';
+        const scheduleName = schedule['Schedule Name']?.toLowerCase() || '';
+        return firstName.includes(query) || lastName.includes(query) || scheduleName.includes(query);
+    });
+
+    displayPagingSchedules(filteredSchedules, selectedFields);
+}
+
+function displayContacts(contacts, additionalFields) {
+    const tableBody = document.getElementById('contactsTableBody');
+    tableBody.innerHTML = '';
+
+    contacts.forEach(contact => {
+        const row = document.createElement('tr');
+
+        const firstNameCell = document.createElement('td');
+        firstNameCell.textContent = contact['First Name'];
+        row.appendChild(firstNameCell);
+
+        const lastNameCell = document.createElement('td');
+        lastNameCell.textContent = contact['Last Name'];
+        row.appendChild(lastNameCell);
+
+        const phoneNumberCell = document.createElement('td');
+        phoneNumberCell.textContent = contact['Phone Number'];
+        row.appendChild(phoneNumberCell);
+
+        additionalFields.forEach(field => {
+            const cell = document.createElement('td');
+            cell.textContent = contact[field] || '';
+            row.appendChild(cell);
+        });
+
+        tableBody.appendChild(row);
+    });
+}
+
+function displayPagingSchedules(schedules, additionalFields) {
+    const tableBody = document.getElementById('pagingTableBody');
+    tableBody.innerHTML = '';
+
+    schedules.forEach(schedule => {
+        const row = document.createElement('tr');
+
+        const firstNameCell = document.createElement('td');
+        firstNameCell.textContent = schedule['First Name'];
+        row.appendChild(firstNameCell);
+
+        const lastNameCell = document.createElement('td');
+        lastNameCell.textContent = schedule['Last Name'];
+        row.appendChild(lastNameCell);
+
+        const scheduleNameCell = document.createElement('td');
+        scheduleNameCell.textContent = schedule['Schedule Name'];
+        row.appendChild(scheduleNameCell);
+
+        additionalFields.forEach(field => {
+            const cell = document.createElement('td');
+            cell.textContent = schedule[field] || '';
+            row.appendChild(cell);
+        });
+
+        tableBody.appendChild(row);
+    });
 }
 
 function identifyPhoneNumberFields(contact, headers) {
     headers.forEach(header => {
-        if (header.toLowerCase().includes('phone') || header.toLowerCase().includes('mobile')) {
-            contact['Device 1 Address'] = contact[header];
+        if (header.toLowerCase().includes('phone') || header.toLowerCase().includes('mobile') || header.toLowerCase().includes('contact')) {
+            contact['Phone Number'] = contact[header];
         }
     });
 }
