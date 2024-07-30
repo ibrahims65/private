@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacts App</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Inline CSS for specific changes */
+        body {
+            background-color: white; /* Set background color to white */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Style for the container */
+        .container {
+            padding: 20px;
+        }
+
+        /* Style for the logo */
+        #logo {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            width: 100px; /* Smaller size for the logo */
+            opacity: 1; /* No opacity */
+            z-index: 1000;
+        }
+
+        /* Style for the field checkboxes */
+        #fieldCheckboxes {
+            display: none; /* Start hidden */
+            max-height: 200px; /* Adjust max height as needed */
+            overflow-y: auto; /* Enable vertical scrolling */
+            border: 1px solid #ccc; /* Add a border */
+            padding: 10px; /* Add some padding */
+            background-color: #f9f9f9; /* Light background for better readability */
+            position: absolute; /* Floating effect */
+            z-index: 999; /* Ensure it appears above other elements */
+            width: 300px; /* Fixed width */
+        }
+
+        /* Style for collapsible button */
+        #collapsibleButton {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        /* Style for done button state */
+        .done-button {
+            background-color: #28a745; /* Green color for done state */
+        }
+
+        /* Style for search buttons */
+        #searchButton {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* Style for table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        /* Style for minimized search */
+        .minimized {
+            display: none; /* Hide when minimized */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <input type="file" id="fileInput">
+        <input type="text" id="nameSearchInput" placeholder="Search by First Name, Last Name (comma-separated)">
+        <button id="searchButton" onclick="searchContacts()">Search</button>
+        <input type="text" id="keywordSearchInput" placeholder="Search keyword across spreadsheet">
+        <button id="keywordSearchButton" onclick="keywordSearch()">Keyword Search</button>
+        <button id="collapsibleButton" onclick="toggleFieldSelection()">Select Additional Fields</button>
+        <button id="copyButton" onclick="copySpreadsheet()">Copy Spreadsheet</button>
+        <div id="fieldCheckboxes"></div>
+        <table>
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Phone Number</th>
+                    <!-- Additional fields will be inserted here -->
+                </tr>
+            </thead>
+            <tbody id="contactsTableBody"></tbody>
+        </table>
+    </div>
+    <img id="logo" src="logo.png" alt="Logo">
+    <script src="app.js"></script>
+</body>
+</html>
