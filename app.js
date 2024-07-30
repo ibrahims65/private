@@ -79,16 +79,17 @@ function searchContacts() {
         const firstName = contact['First Name'] ? contact['First Name'].toLowerCase() : '';
         const lastName = contact['Last Name'] ? contact['Last Name'].toLowerCase() : '';
 
-        const matchesFirstName = queryParts.some(part => firstName.includes(part));
-        const matchesLastName = queryParts.some(part => lastName.includes(part));
-
-        // Check if the search query matches either first name or last name, or both
-        const matchFirstNameLastName = (queryParts.length > 1) && (
-            (queryParts[0] === firstName && queryParts[1] === lastName) ||
-            (queryParts[1] === firstName && queryParts[0] === lastName)
-        );
-
-        return matchesFirstName || matchesLastName || matchFirstNameLastName;
+        if (queryParts.length === 1) {
+            // Search with one query part
+            return firstName.includes(queryParts[0]) || lastName.includes(queryParts[0]);
+        } else if (queryParts.length === 2) {
+            // Search with two query parts (first and last name)
+            return (
+                (firstName.includes(queryParts[0]) && lastName.includes(queryParts[1])) ||
+                (firstName.includes(queryParts[1]) && lastName.includes(queryParts[0]))
+            );
+        }
+        return false;
     });
 
     displayResults(results);
@@ -119,8 +120,10 @@ function displayResults(results) {
         lastNameCell.textContent = contact['Last Name'] || '';
         row.appendChild(lastNameCell);
 
+        // Add a cell for phone numbers
         const phoneNumberCell = document.createElement('td');
-        phoneNumberCell.textContent = contact['Device 1 Address'] || '';
+        const phoneNumbers = getPhoneNumbers(contact);
+        phoneNumberCell.textContent = phoneNumbers.join(', ') || 'No phone number';
         row.appendChild(phoneNumberCell);
 
         additionalFields.forEach(field => {
@@ -131,6 +134,31 @@ function displayResults(results) {
 
         tableBody.appendChild(row);
     });
+}
+
+function getPhoneNumbers(contact) {
+    const phoneNumberPatterns = [
+        /\b\d{3}[-/]\d{3}[-/]\d{4}\b/g,  // e.g., 555-555-5555
+        /\b\d{3}[-/]\d{4}\b/g,           // e.g., 555-5555
+        /\b\d{3}[-/]\d{3}[-/]\d{4}\b/g,  // e.g., 555-555-5555
+        /\b\d{3}\/\d{6}\b/g,              // e.g., 555/555555
+        /\b\d{3}\/\d{3}[-/]\d{4}\b/g     // e.g., 555/555-5555
+    ];
+
+    const phoneNumbers = [];
+
+    for (const [key, value] of Object.entries(contact)) {
+        if (value) {
+            phoneNumberPatterns.forEach(pattern => {
+                const matches = value.match(pattern);
+                if (matches) {
+                    phoneNumbers.push(...matches);
+                }
+            });
+        }
+    }
+
+    return phoneNumbers;
 }
 
 function identifyPhoneNumberFields(contact, headers) {
