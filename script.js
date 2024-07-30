@@ -1,7 +1,7 @@
 let contacts = []; // This will hold your contact data
 let phoneColumn = null; // This will store the detected phone number column
-let additionalFields = []; // Store selected additional fields
 
+// Add event listener to handle file input
 document.getElementById('fileInput').addEventListener('change', function(event) {
     const file = event.target.files[0];
     if (file) {
@@ -9,7 +9,7 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
     }
 });
 
-// Function to parse CSV and load data
+// Function to load CSV file
 function loadCSV(file) {
     const reader = new FileReader();
     reader.onload = function(event) {
@@ -21,7 +21,7 @@ function loadCSV(file) {
     reader.readAsText(file);
 }
 
-// Function to parse CSV data into contacts array
+// Function to parse CSV data
 function parseCSV(csv) {
     const lines = csv.split('\n').filter(line => line.trim() !== ''); // Remove empty lines
     const headers = lines[0].split(',').map(header => header.trim());
@@ -38,10 +38,10 @@ function parseCSV(csv) {
     // Optionally, clear the search fields and results
     document.getElementById('firstName').value = '';
     document.getElementById('lastName').value = '';
-    searchContacts();
+    searchContacts(); // Initial display (optional)
 }
 
-// Function to detect the column most likely containing phone numbers
+// Function to detect the phone number column
 function detectPhoneColumn() {
     if (contacts.length === 0) return;
 
@@ -73,7 +73,7 @@ function detectPhoneColumn() {
     });
 }
 
-// Function to populate the additional fields dropdown
+// Function to populate additional fields in the dropdown
 function populateAdditionalFields() {
     const headers = Object.keys(contacts[0]);
     const dropdown = document.getElementById('additionalFields');
@@ -99,7 +99,7 @@ function searchContacts() {
     const showPhoneNumber = document.getElementById('showPhoneNumber').checked;
 
     // Get selected additional fields
-    additionalFields = Array.from(document.getElementById('additionalFields').selectedOptions)
+    const additionalFields = Array.from(document.getElementById('additionalFields').selectedOptions)
         .map(option => option.value)
         .slice(0, 5); // Limit to 5 additional fields
 
