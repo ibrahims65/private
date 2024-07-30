@@ -82,11 +82,13 @@ function searchContacts() {
         const matchesFirstName = queryParts.some(part => firstName.includes(part));
         const matchesLastName = queryParts.some(part => lastName.includes(part));
 
-        return (
-            matchesFirstName ||
-            matchesLastName ||
-            (queryParts.length > 1 && (matchesFirstName && matchesLastName))
+        // Check if the search query matches either first name or last name, or both
+        const matchFirstNameLastName = (queryParts.length > 1) && (
+            (queryParts[0] === firstName && queryParts[1] === lastName) ||
+            (queryParts[1] === firstName && queryParts[0] === lastName)
         );
+
+        return matchesFirstName || matchesLastName || matchFirstNameLastName;
     });
 
     displayResults(results);
@@ -132,12 +134,17 @@ function displayResults(results) {
 }
 
 function identifyPhoneNumberFields(contact, headers) {
-    const phoneNumberRegex = /\b(\d{3}[-/]\d{3}[-/]\d{4}|\d{3}[-/]\d{4}|\d{3}[-/]\d{3}[-/]\d{4})\b/g;
-    
+    const phoneNumberPatterns = [
+        /\b\d{3}[-/]\d{3}[-/]\d{4}\b/g,  // e.g., 555-555-5555
+        /\b\d{3}[-/]\d{4}\b/g,           // e.g., 555-5555
+        /\b\d{3}[-/]\d{3}[-/]\d{4}\b/g,  // e.g., 555-555-5555
+        /\b\d{3}\/\d{6}\b/g,              // e.g., 555/555555
+        /\b\d{3}\/\d{3}[-/]\d{4}\b/g     // e.g., 555/555-5555
+    ];
+
     headers.forEach(header => {
         const value = contact[header];
-        if (value && phoneNumberRegex.test(value)) {
-            // Check for phone number patterns
+        if (value && phoneNumberPatterns.some(pattern => pattern.test(value))) {
             console.log(`Phone number detected in field '${header}': ${value}`);
 
             // Determine if it is a home, cell, or sms based on header naming conventions
