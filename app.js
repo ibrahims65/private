@@ -27,6 +27,10 @@ function parseCSV(data) {
         headers.forEach((header, index) => {
             contact[header] = values[index] || ''; // Handle missing values
         });
+
+        // Identify phone number fields and their types
+        identifyPhoneNumberFields(contact, headers);
+
         return contact;
     });
 
@@ -69,15 +73,19 @@ function populateFieldSelection(headers) {
 
 function searchContacts() {
     const query = document.getElementById('searchInput').value.trim().toLowerCase();
-    const queryParts = query.split(' ');
+    const queryParts = query.split(',').map(part => part.trim().toLowerCase());
 
     const results = contacts.filter(contact => {
         const firstName = contact['First Name'] ? contact['First Name'].toLowerCase() : '';
         const lastName = contact['Last Name'] ? contact['Last Name'].toLowerCase() : '';
 
+        const matchesFirstName = queryParts.some(part => firstName.includes(part));
+        const matchesLastName = queryParts.some(part => lastName.includes(part));
+
         return (
-            (queryParts.includes(firstName) && queryParts.includes(lastName)) ||
-            (queryParts.includes(lastName) && queryParts.includes(firstName))
+            matchesFirstName ||
+            matchesLastName ||
+            (queryParts.length > 1 && (matchesFirstName && matchesLastName))
         );
     });
 
@@ -120,6 +128,30 @@ function displayResults(results) {
         });
 
         tableBody.appendChild(row);
+    });
+}
+
+function identifyPhoneNumberFields(contact, headers) {
+    const phoneNumberRegex = /\b(\d{3}[-/]\d{3}[-/]\d{4}|\d{3}[-/]\d{4}|\d{3}[-/]\d{3}[-/]\d{4})\b/g;
+    
+    headers.forEach(header => {
+        const value = contact[header];
+        if (value && phoneNumberRegex.test(value)) {
+            // Check for phone number patterns
+            console.log(`Phone number detected in field '${header}': ${value}`);
+
+            // Determine if it is a home, cell, or sms based on header naming conventions
+            const normalizedHeader = header.toLowerCase();
+            if (normalizedHeader.includes('home')) {
+                console.log(`The field '${header}' seems to be a home phone number.`);
+            } else if (normalizedHeader.includes('cell') || normalizedHeader.includes('mobile')) {
+                console.log(`The field '${header}' seems to be a cell phone number.`);
+            } else if (normalizedHeader.includes('sms')) {
+                console.log(`The field '${header}' seems to be an SMS number.`);
+            } else {
+                console.log(`The field '${header}' may contain a phone number but its type is unknown.`);
+            }
+        }
     });
 }
 
