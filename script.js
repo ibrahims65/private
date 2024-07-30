@@ -12,17 +12,22 @@ function loadCSV(file) {
 
 // Function to parse CSV data into contacts array
 function parseCSV(csv) {
-    const lines = csv.split('\n');
-    const headers = lines[0].split(',');
+    const lines = csv.split('\n').filter(line => line.trim() !== ''); // Remove empty lines
+    const headers = lines[0].split(',').map(header => header.trim());
 
     contacts = lines.slice(1).map(line => {
-        const values = line.split(',');
+        const values = line.split(',').map(value => value.trim());
         let contact = {};
         headers.forEach((header, index) => {
             contact[header] = values[index];
         });
         return contact;
     });
+
+    // Optionally, clear the search fields and results
+    document.getElementById('firstName').value = '';
+    document.getElementById('lastName').value = '';
+    searchContacts();
 }
 
 // Function to search and display contacts
@@ -51,19 +56,10 @@ function searchContacts() {
     });
 }
 
-// Initialize file input and load CSV
-document.addEventListener('DOMContentLoaded', () => {
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = '.csv';
-    fileInput.style.display = 'none';
-    fileInput.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            loadCSV(file);
-        }
-    });
-
-    document.body.appendChild(fileInput);
-    fileInput.click();
+// Initialize file input
+document.getElementById('fileInput').addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        loadCSV(file);
+    }
 });
