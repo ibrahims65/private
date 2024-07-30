@@ -2,6 +2,13 @@ let contacts = []; // This will hold your contact data
 let phoneColumn = null; // This will store the detected phone number column
 let additionalFields = []; // Store selected additional fields
 
+document.getElementById('fileInput').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        loadCSV(file);
+    }
+});
+
 // Function to parse CSV and load data
 function loadCSV(file) {
     const reader = new FileReader();
@@ -69,4 +76,49 @@ function detectPhoneColumn() {
 // Function to populate the additional fields dropdown
 function populateAdditionalFields() {
     const headers = Object.keys(contacts[0]);
-    const dropdown = document.getElementById('
+    const dropdown = document.getElementById('additionalFields');
+    dropdown.innerHTML = ''; // Clear existing options
+
+    headers.forEach(header => {
+        if (header !== 'First Name' && header !== 'Last Name' && header !== phoneColumn) {
+            const option = document.createElement('option');
+            option.value = header;
+            option.textContent = header;
+            dropdown.appendChild(option);
+        }
+    });
+}
+
+// Function to search and display contacts
+function searchContacts() {
+    const firstName = document.getElementById('firstName').value.toLowerCase();
+    const lastName = document.getElementById('lastName').value.toLowerCase();
+
+    const showFirstName = document.getElementById('showFirstName').checked;
+    const showLastName = document.getElementById('showLastName').checked;
+    const showPhoneNumber = document.getElementById('showPhoneNumber').checked;
+
+    // Get selected additional fields
+    additionalFields = Array.from(document.getElementById('additionalFields').selectedOptions)
+        .map(option => option.value)
+        .slice(0, 5); // Limit to 5 additional fields
+
+    const results = contacts.filter(contact =>
+        (firstName === '' || contact['First Name'].toLowerCase().includes(firstName)) &&
+        (lastName === '' || contact['Last Name'].toLowerCase().includes(lastName))
+    );
+
+    const tableBody = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
+    tableBody.innerHTML = '';
+
+    results.forEach(contact => {
+        const row = tableBody.insertRow();
+        if (showFirstName) row.insertCell().textContent = contact['First Name'];
+        if (showLastName) row.insertCell().textContent = contact['Last Name'];
+        if (showPhoneNumber) row.insertCell().textContent = contact[phoneColumn];
+        
+        additionalFields.forEach(field => {
+            row.insertCell().textContent = contact[field] || '';
+        });
+    });
+}
