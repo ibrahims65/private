@@ -53,10 +53,10 @@ function searchContacts() {
     const query = document.getElementById("searchInput").value.toLowerCase();
     const phoneRegex = /\b(?:\d{3}[-/]\d{2,4}[-/]\d{4}|\d{3}[-]\d{3}[-]\d{4})\b/;
     const results = contacts.filter(contact => 
-        (contact['First Name'] && contact['First Name'].toLowerCase().includes(query)) || 
-        (contact['Last Name'] && contact['Last Name'].toLowerCase().includes(query)) ||
-        (contact['Device 1 Address'] && contact['Device 1 Address'].toString().toLowerCase().includes(query)) ||
-        Object.values(contact).some(value => phoneRegex.test(value))
+        (contact['First Name'] && String(contact['First Name']).toLowerCase().includes(query)) || 
+        (contact['Last Name'] && String(contact['Last Name']).toLowerCase().includes(query)) ||
+        (contact['Device 1 Address'] && String(contact['Device 1 Address']).toLowerCase().includes(query)) ||
+        Object.values(contact).some(value => phoneRegex.test(String(value)))
     );
     displayResults(results);
 }
@@ -84,3 +84,8 @@ function displayResults(results) {
         tableBody.appendChild(row);
     });
 }
+
+// Collapsible logic
+document.addEventListener('DOMContentLoaded', () => {
+    const coll = document.getElementsByClassName("collapsible");
+    for (let i = 0; i < coll.length;
