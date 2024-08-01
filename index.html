@@ -3,113 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contacts App</title>
+    <title>Disaster Recovery and Contact Search Tool</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Inline CSS for specific changes */
-        body {
-            background-color: white; /* Set background color to white */
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Style for the container */
-        .container {
-            padding: 20px;
-        }
-
-        /* Style for the logo */
-        #logo {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            width: 100px; /* Smaller size for the logo */
-            opacity: 1; /* No opacity */
-            z-index: 1000;
-        }
-
-        /* Style for the field checkboxes */
-        #fieldCheckboxes {
-            display: none; /* Start hidden */
-            max-height: 200px; /* Adjust max height as needed */
-            overflow-y: auto; /* Enable vertical scrolling */
-            border: 1px solid #ccc; /* Add a border */
-            padding: 10px; /* Add some padding */
-            background-color: #f9f9f9; /* Light background for better readability */
-            position: absolute; /* Floating effect */
-            z-index: 999; /* Ensure it appears above other elements */
-            width: 300px; /* Fixed width */
-        }
-
-        /* Style for collapsible button */
-        #collapsibleButton {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-
-        /* Style for done button state */
-        .done-button {
-            background-color: #28a745; /* Green color for done state */
-        }
-
-        /* Style for search buttons */
-        #searchButton {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        /* Style for table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        th {
-            background-color: #f4f4f4;
-        }
-    </style>
 </head>
 <body>
-    <div class="container">
-        <input type="file" id="fileInput">
-        <input type="text" id="searchInput" placeholder="Search by First Name, Last Name (comma-separated)">
-        <button id="searchButton" onclick="searchContacts()">Search</button>
-        <button id="collapsibleButton" onclick="toggleFieldSelection()">Select Additional Fields</button>
-        <div id="fieldCheckboxes"></div>
-        <table>
-            <thead>
-                <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Phone Number</th>
-                    <!-- Additional fields will be inserted here -->
-                </tr>
-            </thead>
-            <tbody id="contactsTableBody"></tbody>
-        </table>
-    </div>
-    <img id="logo" src="logo.png" alt="Logo">
-    <script src="app.js"></script>
+    <header>
+        <img src="logo.png" alt="Company Logo" id="company-logo">
+        <h1>Disaster Recovery and Contact Search Tool</h1>
+    </header>
+
+    <main>
+        <section id="diagram-section" class="section">
+            <h2>Disaster Recovery Steps</h2>
+            <div class="process-diagram">
+                <div id="step1" class="process-step step-1">
+                    <div class="icon"></div>
+                    <div class="content">
+                        <h3>Open a TOC Line</h3>
+                        <select id="toc-line-select">
+                            <option value="TOC1">TOC1</option>
+                            <option value="TOC2">TOC2</option>
+                            <option value="TOC3">TOC3</option>
+                            <option value="TOC4">TOC4</option>
+                            <option value="TOC5">TOC5</option>
+                            <option value="TOC6">TOC6</option>
+                            <option value="TOC7">TOC7</option>
+                            <option value="TOC8">TOC8</option>
+                            <option value="TOC9">TOC9</option>
+                            <option value="TOC10">TOC10</option>
+                        </select>
+                        <button onclick="openWebexLine()">Open Webex Line</button>
+                        <button onclick="openLink('conference')">800 Bridge</button>
+                        <button class="complete-btn" onclick="markComplete('step1')">Complete</button>
+                    </div>
+                    <div class="checkmark">✓</div>
+                </div>
+                <div class="process-arrow">➔</div>
+                <div id="step2" class="process-step step-2">
+                    <div class="icon"></div>
+                    <div class="content">
+                        <h3>Open MIR3</h3>
+                        <button onclick="openLink('mir3')">MIR3</button>
+                        <button onclick="toggleSearchSection()">Use Search</button>
+                        <button class="complete-btn" onclick="markComplete('step2')">Complete</button>
+                    </div>
+                    <div class="checkmark">✓</div>
+                </div>
+                <div class="process-arrow">➔</div>
+                <div id="step3" class="process-step step-3">
+                    <div class="icon"></div>
+                    <div class="content">
+                        <h3>Open NOC Log Excel Sheet</h3>
+                        <button onclick="openLink('noc-log')">Open NOC Log</button>
+                        <button class="complete-btn" onclick="markComplete('step3')">Complete</button>
+                    </div>
+                    <div class="checkmark">✓</div>
+                </div>
+                <div class="process-arrow">➔</div>
+                <div id="step4" class="process-step step-4">
+                    <div class="icon"></div>
+                    <div class="content">
+                        <h3>Open Application Recovery Roll Call</h3>
+                        <button onclick="openLink('app-recovery')">Open Roll Call</button>
+                        <button class="complete-btn" onclick="markComplete('step4')">Complete</button>
+                    </div>
+                    <div class="checkmark">✓</div>
+                </div>
+            </div>
+        </section>
+
+        <button id="toggle-search-section" onclick="toggleSearchSection()">Toggle Search Section</button>
+
+        <section id="search-section" class="section">
+            <div class="search-box contacts-search">
+                <h2>Search Contacts</h2>
+                <div id="search-form">
+                    <input type="file" id="fileInput" accept=".csv">
+                    <input type="text" id="search-input" placeholder="Search contacts...">
+                    <button id="search-button" onclick="searchContacts()">Search</button>
+                    <button onclick="toggleFieldSelection('fieldCheckboxes')">Select Additional Fields</button>
+                    <div id="fieldCheckboxes" class="field-selection"></div>
+                </div>
+                <table id="results-table">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Phone Number</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="search-box paging-search">
+                <h2>Paging Schedules and Membership</h2>
+                <div id="paging-search-form">
+                    <input type="file" id="pagingFileInput" accept=".csv">
+                    <input type="text" id="pagingSearchInput" placeholder="Search paging schedules...">
+                    <button id="pagingSearchButton" onclick="searchPaging()">Search</button>
+                    <button onclick="toggleFieldSelection('pagingFieldCheckboxes')">Select Additional Fields</button>
+                    <div id="pagingFieldCheckboxes" class="paging-field-selection"></div>
+                </div>
+                <table id="paging-table">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Schedule Name</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pagingTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="apps.js"></script>
 </body>
 </html>
