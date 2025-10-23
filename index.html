@@ -3,123 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Disaster Recovery and Contact Search Tool</title>
+    <title>eTAS Document Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <img src="logo.png" alt="Company Logo" id="company-logo">
-        <h1>Disaster Recovery and Contact Search Tool</h1>
-    </header>
+    <div class="app-container">
+        <!-- Sidebar for user input -->
+        <div class="sidebar">
+            <h3>eTAS Generator</h3>
+            <div class="input-group">
+                <label for="photo-upload">Photo</label>
+                <input type="file" id="photo-upload" accept="image/*">
+            </div>
+            <div class="input-group">
+                <label for="input-etas-number">eTAS Number</label>
+                <input type="text" id="input-etas-number" value="000000000000">
+            </div>
+            <div class="input-group">
+                <label for="input-full-name">Full Name</label>
+                <input type="text" id="input-full-name" value="JOHN DOE">
+            </div>
+            <div class="input-group">
+                <label for="input-passport-number">Passport Number</label>
+                <input type="text" id="input-passport-number" value="P00000000">
+            </div>
+            <div class="input-group">
+                <label for="input-nationality">Nationality</label>
+                <input type="text" id="input-nationality" value="UNITED STATES">
+            </div>
+            <div class="input-group">
+                <label for="input-dob">Date of Birth</label>
+                <input type="text" id="input-dob" value="01-01-1970">
+            </div>
+            <div class="input-group">
+                <label for="input-gender">Gender</label>
+                <input type="text" id="input-gender" value="MALE">
+            </div>
+            <div class="input-group">
+                <label for="input-travel-document">Travel Document</label>
+                <input type="text" id="input-travel-document" value="PASSPORT">
+            </div>
+            <div class="input-group">
+                <label for="input-date-of-issue">Date of Issue</label>
+                <input type="text" id="input-date-of-issue" value="01-01-2020">
+            </div>
+            <div class="input-group">
+                <label for="input-date-of-expiry">Date of Expiry</label>
+                <input type="text" id="input-date-of-expiry" value="01-01-2030">
+            </div>
+            <div class="input-group">
+                <label for="input-place-of-issue">Place of Issue</label>
+                <input type="text" id="input-place-of-issue" value="USA">
+            </div>
+            <div class="input-group">
+                <label for="input-visa-type">Visa Type</label>
+                <input type="text" id="input-visa-type" value="TOURIST">
+            </div>
+            <div class="input-group">
+                <label for="input-valid-from">Valid From</label>
+                <input type="text" id="input-valid-from" value="01-01-2024">
+            </div>
+            <div class="input-group">
+                <label for="input-valid-until">Valid Until</label>
+                <input type="text" id="input-valid-until" value="01-01-2025">
+            </div>
+            <div class="input-group">
+                <label for="input-purpose">Purpose of Visit</label>
+                <input type="text" id="input-purpose" value="TOURISM">
+            </div>
+            <div class="input-group">
+                <label for="input-port-of-entry">Port of Entry</label>
+                <input type="text" id="input-port-of-entry" value="MOGADISHU">
+            </div>
+        </div>
 
-    <main>
-        <section id="diagram-section" class="section">
-            <h2>Disaster Recovery Steps</h2>
-            <div class="process-diagram">
-                <div id="step1" class="process-step step-1">
-                    <div class="icon"></div>
-                    <div class="content">
-                        <h3>Open a TOC Line</h3>
-                        <select id="toc-line-select">
-                            <option value="TOC1">TOC1</option>
-                            <option value="TOC2">TOC2</option>
-                            <option value="TOC3">TOC3</option>
-                            <option value="TOC4">TOC4</option>
-                            <option value="TOC5">TOC5</option>
-                            <option value="TOC6">TOC6</option>
-                            <option value="TOC7">TOC7</option>
-                            <option value="TOC8">TOC8</option>
-                            <option value="TOC9">TOC9</option>
-                            <option value="TOC10">TOC10</option>
-                        </select>
-                        <button onclick="openWebexLine()">Open Webex Line</button>
-                        <button onclick="openLink('conference')">800 Bridge</button>
-                        <button class="complete-btn" onclick="markComplete('step1')">Complete</button>
+        <!-- Document Preview -->
+        <div class="document-container">
+            <div id="etas-document">
+                <div class="header">
+                    <img src="somalia-logo.png" alt="Coat of Arms" class="logo">
+                    <div class="header-text">
+                        <p class="somali-text">JAMHUURIYADDA FEDERAALKA SOOMAALIYA</p>
+                        <p class="english-text">FEDERAL REPUBLIC OF SOMALIA</p>
                     </div>
-                    <div class="checkmark">✓</div>
+                    <h1 class="etas-title">eTAS</h1>
                 </div>
-                <div class="process-arrow">➔</div>
-                <div id="step2" class="process-step step-2">
-                    <div class="icon"></div>
-                    <div class="content">
-                        <h3>Open MIR3</h3>
-                        <button onclick="openLink('mir3')">MIR3</button>
-                        <button onclick="toggleSearchSection()">Use Search</button>
-                        <button class="complete-btn" onclick="markComplete('step2')">Complete</button>
+
+                <div class="main-content">
+                    <div class="left-column">
+                        <img id="doc-photo" src="placeholder.png" alt="Applicant Photo" class="photo">
+
+                        <div class="info-item">
+                            <span class="label">eTAS Number</span>
+                            <span id="doc-etas-number" class="value">000000000000</span>
+                        </div>
+                        <div class="wavy-separator"></div>
+
+                        <div class="info-item">
+                            <span class="label">Full Name</span>
+                            <span id="doc-full-name" class="value">JOHN DOE</span>
+                        </div>
+                        <div class="wavy-separator"></div>
+
+                        <div class="info-item">
+                            <span class="label">Passport Number</span>
+                            <span id="doc-passport-number" class="value">P00000000</span>
+                        </div>
+                        <div class="wavy-separator"></div>
+
+                        <div class="info-item">
+                            <span class="label">Nationality</span>
+                            <span id="doc-nationality" class="value">UNITED STATES</span>
+                        </div>
+                        <div class="wavy-separator"></div>
+
+                        <div class="info-item">
+                            <span class="label">Date of Birth</span>
+                            <span id="doc-dob" class="value">01-01-1970</span>
+                        </div>
+                        <div class="wavy-separator"></div>
+
+                        <div class="info-item">
+                            <span class="label">Gender</span>
+                            <span id="doc-gender" class="value">MALE</span>
+                        </div>
+                        <div class="wavy-separator"></div>
+
+                        <div class="info-item">
+                            <span class="label">Travel Document</span>
+                            <span id="doc-travel-document" class="value">PASSPORT</span>
+                        </div>
+                        <div class="wavy-separator"></div>
+
+                        <div class="info-item">
+                            <span class="label">Date of Issue</span>
+                            <span id="doc-date-of-issue" class="value">01-01-2020</span>
+                        </div>
+                        <div class="wavy-separator"></div>
+
+                        <div class="info-item">
+                            <span class="label">Date of Expiry</span>
+                            <span id="doc-date-of-expiry" class="value">01-01-2030</span>
+                        </div>
+                        <div class="wavy-separator"></div>
+
+                        <div class="info-item">
+                            <span class="label">Place of Issue</span>
+                            <span id="doc-place-of-issue" class="value">USA</span>
+                        </div>
+                        <div class="wavy-separator"></div>
+
+                        <div class="info-item">
+                            <span class="label">Visa Type</span>
+                            <span id="doc-visa-type" class="value">TOURIST</span>
+                        </div>
+                        <div class="wavy-separator"></div>
+
+                        <div class="info-item">
+                            <span class="label">Valid From</span>
+                            <span id="doc-valid-from" class="value">01-01-2024</span>
+                        </div>
+                        <div class="wavy-separator"></div>
+
+                        <div class="info-item">
+                            <span class="label">Valid Until</span>
+                            <span id="doc-valid-until" class="value">01-01-2025</span>
+                        </div>
+                        <div class="wavy-separator"></div>
+
+                        <div class="info-item">
+                            <span class="label">Purpose of Visit</span>
+                            <span id="doc-purpose" class="value">TOURISM</span>
+                        </div>
+                        <div class="wavy-separator"></div>
+
+                        <div class="info-item">
+                            <span class="label">Port of Entry</span>
+                            <span id="doc-port-of-entry" class="value">MOGADISHU</span>
+                        </div>
                     </div>
-                    <div class="checkmark">✓</div>
-                </div>
-                <div class="process-arrow">➔</div>
-                <div id="step3" class="process-step step-3">
-                    <div class="icon"></div>
-                    <div class="content">
-                        <h3>Open NOC Log Excel Sheet</h3>
-                        <button onclick="openLink('noc-log')">Open NOC Log</button>
-                        <button class="complete-btn" onclick="markComplete('step3')">Complete</button>
+
+                    <div class="right-column">
+                        <div id="doc-qr-code" class="qr-code"></div>
+                        <div class="conditions">
+                            <h4>CONDITIONS</h4>
+                            <ol>
+                                <li>The holder of this eTAS is allowed to enter and stay in Somalia for the period of the visa validity.</li>
+                                <li>The holder of this eTAS must present it to the immigration officer at the port of entry.</li>
+                                <li>This eTAS is not a guarantee of entry. The final decision rests with the immigration officer.</li>
+                            </ol>
+                        </div>
+                        <div class="notice">
+                            <h4>IMPORTANT NOTICE</h4>
+                            <p>This document is computer generated. Any alteration is a criminal offence.</p>
+                        </div>
+                        <div class="disclaimer">
+                            <p>FOR EXPERIMENTAL USE ONLY</p>
+                        </div>
                     </div>
-                    <div class="checkmark">✓</div>
-                </div>
-                <div class="process-arrow">➔</div>
-                <div id="step4" class="process-step step-4">
-                    <div class="icon"></div>
-                    <div class="content">
-                        <h3>Open Application Recovery Roll Call</h3>
-                        <button onclick="openLink('app-recovery')">Open Roll Call</button>
-                        <button class="complete-btn" onclick="markComplete('step4')">Complete</button>
-                    </div>
-                    <div class="checkmark">✓</div>
                 </div>
             </div>
-        </section>
+        </div>
+    </div>
 
-        <button id="toggle-search-section" onclick="toggleSearchSection()">Toggle Search Section</button>
-
-        <section id="search-section" class="section">
-            <div class="search-box contacts-search">
-                <h2>Search Contacts</h2>
-                <div id="search-form">
-                    <input type="file" id="fileInput" accept=".csv">
-                    <input type="text" id="search-input" placeholder="Search contacts...">
-                    <button id="search-button" onclick="searchContacts()">Search</button>
-                    <button onclick="toggleFieldSelection('fieldCheckboxes')">Select Additional Fields</button>
-                    <div id="fieldCheckboxes" class="field-selection"></div>
-                </div>
-                <table id="results-table">
-                    <thead>
-                        <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Phone Number</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-
-            <div class="search-box paging-search">
-                <h2>Paging Schedules and Membership</h2>
-                <div id="paging-search-form">
-                    <input type="file" id="pagingFileInput" accept=".csv">
-                    <input type="text" id="pagingSearchInput" placeholder="Search paging schedules...">
-                    <button id="pagingSearchButton" onclick="searchPaging()">Search</button>
-                    <button onclick="toggleFieldSelection('pagingFieldCheckboxes')">Select Additional Fields</button>
-                    <div id="pagingFieldCheckboxes" class="paging-field-selection"></div>
-                </div>
-                <table id="paging-table">
-                    <thead>
-                        <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Schedule Name</th>
-                        </tr>
-                    </thead>
-                    <tbody id="pagingTableBody"></tbody>
-                </table>
-            </div>
-        </section>
-    </main>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-    <script src="apps.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
