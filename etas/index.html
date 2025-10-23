@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Federal Republic of Somalia eTAS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="watermark">FOR EXPERIMENTAL USE ONLY</div>
+        <div class="header wavy-divider">
+            <img src="images/coat-of-arms.svg" alt="Coat of Arms of Somalia">
+            <div class="header-text">
+                <h1>FEDERAL REPUBLIC OF SOMALIA</h1>
+                <h2>e-Tourist Authorization System (eTAS)</h2>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="photo-qr-section">
+                <div class="photo">
+                    <img id="photo-preview" src="images/placeholder.svg" alt="Applicant Photo">
+                </div>
+                <div class="qr-code">
+                    <canvas id="qr-canvas"></canvas>
+                </div>
+            </div>
+            <div class="data-grid">
+                <div class="data-field">
+                    <label>eTAS Number</label>
+                    <span id="etas-number">S0M-E-V1S4-2024-0001</span>
+                </div>
+                <div class="data-field">
+                    <label>Family Name</label>
+                    <span id="family-name">DOE</span>
+                </div>
+                <div class="data-field">
+                    <label>Given Names</label>
+                    <span id="given-names">JOHN</span>
+                </div>
+                <div class="data-field">
+                    <label>Nationality</label>
+                    <span id="nationality">UNITED STATES OF AMERICA</span>
+                </div>
+                <div class="data-field">
+                    <label>Date of Birth</label>
+                    <span id="dob">1990-01-01</span>
+                </div>
+                <div class="data-field">
+                    <label>Place of Birth</label>
+                    <span id="pob">WASHINGTON D.C.</span>
+                </div>
+                <div class="data-field">
+                    <label>Passport Number</label>
+                    <span id="passport-number">P123456789</span>
+                </div>
+                <div class="data-field">
+                    <label>Date of Issue</label>
+                    <span id="issue-date">2022-01-01</span>
+                </div>
+                <div class="data-field">
+                    <label>Date of Expiry</label>
+                    <span id="expiry-date">2032-01-01</span>
+                </div>
+                <div class="data-field">
+                    <label>Visa Type</label>
+                    <span id="visa-type">TOURIST</span>
+                </div>
+                <div class="data-field">
+                    <label>Validity</label>
+                    <span id="validity">90 DAYS</span>
+                </div>
+                <div class="data-field">
+                    <label>Date of Arrival</label>
+                    <span id="arrival-date">2024-12-01</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <p>This document is issued for the sole purpose of authorizing travel to Somalia and does not confer a right of entry.</p>
+        </div>
+    </div>
+    <div class="form-container">
+        <h2>Enter Your Information</h2>
+        <form id="etas-form">
+            <input type="text" id="form-family-name" placeholder="Family Name">
+            <input type="text" id="form-given-names" placeholder="Given Names">
+            <input type="text" id="form-nationality" placeholder="Nationality">
+            <input type="date" id="form-dob" placeholder="Date of Birth">
+            <input type="text" id="form-pob" placeholder="Place of Birth">
+            <input type="text" id="form-passport-number" placeholder="Passport Number">
+            <input type="date" id="form-issue-date" placeholder="Date of Issue">
+            <input type="date" id="form-expiry-date" placeholder="Date of Expiry">
+            <input type="date" id="form-arrival-date" placeholder="Date of Arrival">
+            <input type="file" id="form-photo" accept="image/*">
+            <button type="submit">Generate eTAS</button>
+        </form>
+        <button id="download-pdf">Download as PDF</button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
