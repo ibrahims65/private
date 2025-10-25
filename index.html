@@ -5,7 +5,224 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>eTAS Document Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            display: flex;
+            font-family: 'Roboto', sans-serif;
+            background-color: #e9e9e9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .app-container {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .sidebar {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .sidebar h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .document-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        #etas-document {
+            width: 800px;
+            background-color: #fff;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #etas-document::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('somalia-logo.png');
+            background-repeat: repeat;
+            background-size: 80px;
+            opacity: 0.05;
+            z-index: 1;
+        }
+
+        .header, .main-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 10px;
+            border-bottom: 4px solid #0d47a1;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #0d47a1;
+        }
+
+        .logo {
+            width: 85px;
+            height: auto;
+        }
+
+        .header-text {
+            text-align: center;
+            color: #0d47a1;
+            font-family: 'Noto Sans', sans-serif;
+            line-height: 1.1;
+        }
+
+        .header-text .somali-text {
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .header-text .english-text {
+            margin: 0;
+        }
+
+        .etas-title {
+            font-size: 64px;
+            color: #0d47a1;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .main-content {
+            display: flex;
+            margin-top: 30px;
+            gap: 40px;
+        }
+
+        .left-column {
+            width: 60%;
+        }
+
+        .photo {
+            width: 150px;
+            height: 200px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            object-fit: cover;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 10px 0;
+        }
+
+        .info-item .label {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .info-item .value {
+            font-weight: 700;
+            color: #000;
+            font-size: 16px;
+        }
+
+        .wavy-separator {
+            border-bottom: 1px dashed #ccc;
+            height: 1px;
+            margin: 6px 0;
+        }
+
+        .right-column {
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .qr-code {
+            width: 180px;
+            height: 180px;
+            margin-bottom: 20px;
+        }
+
+        .conditions, .notice {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .conditions h4, .notice h4 {
+            margin-top: 0;
+            color: #0d47a1;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .conditions ol {
+            padding-left: 20px;
+            margin: 0;
+            font-size: 11px;
+        }
+
+        .notice p {
+            font-size: 11px;
+            text-align: center;
+            margin: 0;
+        }
+
+        .disclaimer {
+            color: #d9534f;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
     <div class="app-container">
@@ -93,91 +310,76 @@
                 <div class="main-content">
                     <div class="left-column">
                         <img id="doc-photo" src="placeholder.png" alt="Applicant Photo" class="photo">
-
                         <div class="info-item">
                             <span class="label">eTAS Number</span>
                             <span id="doc-etas-number" class="value">000000000000</span>
                         </div>
                         <div class="wavy-separator"></div>
-
                         <div class="info-item">
                             <span class="label">Full Name</span>
                             <span id="doc-full-name" class="value">JOHN DOE</span>
                         </div>
                         <div class="wavy-separator"></div>
-
                         <div class="info-item">
                             <span class="label">Passport Number</span>
                             <span id="doc-passport-number" class="value">P00000000</span>
                         </div>
                         <div class="wavy-separator"></div>
-
                         <div class="info-item">
                             <span class="label">Nationality</span>
                             <span id="doc-nationality" class="value">UNITED STATES</span>
                         </div>
                         <div class="wavy-separator"></div>
-
                         <div class="info-item">
                             <span class="label">Date of Birth</span>
                             <span id="doc-dob" class="value">01-01-1970</span>
                         </div>
                         <div class="wavy-separator"></div>
-
                         <div class="info-item">
                             <span class="label">Gender</span>
                             <span id="doc-gender" class="value">MALE</span>
                         </div>
                         <div class="wavy-separator"></div>
-
                         <div class="info-item">
                             <span class="label">Travel Document</span>
                             <span id="doc-travel-document" class="value">PASSPORT</span>
                         </div>
                         <div class="wavy-separator"></div>
-
                         <div class="info-item">
                             <span class="label">Date of Issue</span>
                             <span id="doc-date-of-issue" class="value">01-01-2020</span>
                         </div>
                         <div class="wavy-separator"></div>
-
                         <div class="info-item">
                             <span class="label">Date of Expiry</span>
                             <span id="doc-date-of-expiry" class="value">01-01-2030</span>
                         </div>
                         <div class="wavy-separator"></div>
-
                         <div class="info-item">
                             <span class="label">Place of Issue</span>
                             <span id="doc-place-of-issue" class="value">USA</span>
                         </div>
                         <div class="wavy-separator"></div>
-
                         <div class="info-item">
                             <span class="label">Visa Type</span>
                             <span id="doc-visa-type" class="value">TOURIST</span>
                         </div>
                         <div class="wavy-separator"></div>
-
                         <div class="info-item">
                             <span class="label">Valid From</span>
                             <span id="doc-valid-from" class="value">01-01-2024</span>
                         </div>
                         <div class="wavy-separator"></div>
-
                         <div class="info-item">
                             <span class="label">Valid Until</span>
                             <span id="doc-valid-until" class="value">01-01-2025</span>
                         </div>
                         <div class="wavy-separator"></div>
-
                         <div class="info-item">
                             <span class="label">Purpose of Visit</span>
                             <span id="doc-purpose" class="value">TOURISM</span>
                         </div>
                         <div class="wavy-separator"></div>
-
                         <div class="info-item">
                             <span class="label">Port of Entry</span>
                             <span id="doc-port-of-entry" class="value">MOGADISHU</span>
@@ -208,6 +410,56 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = document.querySelectorAll('.sidebar input');
+
+            const updateDocument = () => {
+                let qrText = '';
+                inputs.forEach(input => {
+                    const docElementId = 'doc-' + input.id.replace('input-', '');
+                    const docElement = document.getElementById(docElementId);
+
+                    if (docElement) {
+                        if (input.type !== 'file') {
+                            docElement.textContent = input.value;
+                        }
+                    }
+                    if (input.type !== 'file' && input.value) {
+                        qrText += `${input.previousElementSibling.textContent}: ${input.value}\n`;
+                    }
+                });
+
+                const qrCodeContainer = document.getElementById('doc-qr-code');
+                qrCodeContainer.innerHTML = '';
+                new QRCode(qrCodeContainer, {
+                    text: qrText.trim(),
+                    width: 180,
+                    height: 180,
+                    colorDark: '#000000',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            };
+
+            inputs.forEach(input => {
+                if (input.type === 'file') {
+                    input.addEventListener('change', (event) => {
+                        const file = event.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                document.getElementById('doc-photo').src = e.target.result;
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                } else {
+                    input.addEventListener('keyup', updateDocument);
+                }
+            });
+            updateDocument();
+        });
+    </script>
 </body>
 </html>
